@@ -8,14 +8,14 @@ from langchain.llms.base import LLM
 llm_OAI = ChatOpenAI(
     #model="gpt-4-turbo-preview", # "gpt-4" or "gpt-3.5-turbo"
     model="gpt-3.5-turbo",
-    openai_api_key="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",  # Replace with your OpenAI API key
+    openai_api_key="",  # Replace with your OpenAI API key
     temperature=0.7,  # Adjust the creativity level
     max_tokens=500,   # Set the maximum output token limit
     verbose=True
 )
 from openai import OpenAI
 client = OpenAI(
-    api_key = "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",
+    api_key = "",
     organization= None
 )
 
@@ -49,7 +49,7 @@ class ChatGroqLLM(LLM):
         return "chat_groq"
 
 
-groq_api_key = "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"
+groq_api_key = ""
 # Initialize Groq Langchain chat object and conversation
 groq_chat = ChatGroq(
     groq_api_key=groq_api_key,
