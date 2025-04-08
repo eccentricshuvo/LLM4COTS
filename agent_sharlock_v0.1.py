@@ -37,7 +37,7 @@ class ChatGroqLLM(LLM):
         return "chat_groq"
 
 
-groq_api_key = "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"
+groq_api_key = ""
 # Initialize Groq Langchain chat object and conversation
 groq_chat = ChatGroq(
     groq_api_key=groq_api_key,
@@ -332,7 +332,7 @@ def couldnot_generate(state: AgentState):
 ######################### OPENAI File Assistant  ####################
 from openai import OpenAI
 client = OpenAI(
-    api_key = "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",
+    api_key = "",
     organization= None
 )
 #%%
