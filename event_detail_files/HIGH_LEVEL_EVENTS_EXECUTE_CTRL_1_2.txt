@@ -1,0 +1,10 @@
+- Net: branch_mispredict_i
+- High-Level Event: Branch misprediction detected.
+- Logical Summary: This net indicates a branch misprediction occurs when the execution path does not match the predicted path, as highlighted by the conjunction with the `padv_execute_o` signal. This suggests that the CPU's prediction mechanism has failed, necessitating corrective actions to redirect the instruction flow based on the correct target.
+- Reasoning: The JSON condition demonstrates that when the clock triggers and both `padv_execute_o` and `branch_mispredict_i` are active, it leads to the assignment of a new PC value (`execute_mispredict_target_i`), signifying that the architecture has identified a branch misprediction that requires the instruction pointer to be adjusted accordingly.
+
+- Net: checking
+- High-Level Event: Status check for special register access.
+- Logical Summary: The logical expression suggests that the net is involved in verifying conditions for writing to a special register (spr) based on access rights and control signals. It confirms that a write operation can proceed only if certain conditions related to the control signals and register access permissions are met.
+- Reasoning: The architecture ensures that special register writes are controlled and validated through a combination of access flags and control signals, preventing unauthorized or erroneous modifications to critical system state.
+

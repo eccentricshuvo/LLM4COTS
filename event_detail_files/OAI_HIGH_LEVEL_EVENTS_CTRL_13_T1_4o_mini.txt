@@ -1,0 +1,14 @@
+Net: ctrl_flag_clear
+
+High-Level Event: Instruction flag clear detected.
+
+Logical Summary & Reasoning: The ctrl_flag_clear signal is primarily gated by the logical conditions related to flag setting operations in the execution unit. Specifically, it is influenced by control signals that dictate whether the execution unit should clear certain flags, such as when completing arithmetic comparison operations. The signal indicates a reset state for specific flags which might be influenced by various operations including conditional comparisons and instruction resets.
+
+Test-Stimulus Guidance: To provoke the ctrl_flag_clear event, software can perform a series of arithmetic or comparison instructions followed by operations that are expected to clear flags. Specifically, the program should include comparison instructions (e.g., equality, less than, etc.) followed by any instruction that could lead to a reset of the flags, such as setting or clearing flags explicitly.
+
+Instruction Categories: 
+1. Arithmetic Instructions (e.g., ADD, SUB)
+2. Comparison Instructions (e.g., CMP, BEQ, BNE)
+3. Control Instructions (e.g., instructions that target flag operations or resets)
+4. Conditional Branch Instructions (that might result in a change of flow, thereby affecting flags)
+

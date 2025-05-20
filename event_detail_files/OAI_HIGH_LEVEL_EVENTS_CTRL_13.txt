@@ -1,0 +1,15 @@
+Net: ctrl_flag_clear
+
+[Q1] High-Level Event: Control flag clear operation is determined based on various conditions and input signals.
+   
+[Q2] Logical Summary & Reasoning: The `ctrl_flag_clear` signal is used to control the clearing of a flag in the processor based on multiple conditions. It is directly influenced by signals like `mor1kx_execute_ctrl_cappuccino_rst`, `mor1kx_execute_ctrl_cappuccino_padv_i`, `mor1kx_execute_alu_fpu_op_is_cmp`, and `mor1kx_execute_alu_opc_alu_secondary_i`. The signal determines whether to clear a flag or not by evaluating different scenarios and conditions within the processor.
+
+[Q3] Test-Stimulus Guidance: 
+- To provoke the clearing of the control flag, software can execute instructions that involve comparisons or arithmetic operations that affect the flags.
+- Software can also set specific control signals to trigger the clearing of the flag in the processor.
+
+[Q4] Instruction Categories:
+1. Arithmetic Instructions: Instructions that involve arithmetic operations can influence the control flag clearing mechanism.
+2. Comparison Instructions: Instructions that perform comparisons between operands can impact the control flag clearing process.
+3. Control Flow Instructions: Instructions related to control flow may affect the conditions under which the control flag is cleared.
+

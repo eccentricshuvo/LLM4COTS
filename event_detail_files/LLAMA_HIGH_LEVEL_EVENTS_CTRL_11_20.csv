@@ -1,0 +1,11 @@
+High-Level Event,Net,Triggered?,Comments
+Instruction execution delay slot management.,ctrl_delay_slot,,
+Exception handling and program counter update.,ctrl_epcr_o,,
+Conditional flag clearing during instruction execution.,ctrl_flag_clear,,
+Instruction execution triggers conditional flag clearing.,ctrl_flag_clear_i,,
+Instruction execution updates the conditional flag.,ctrl_flag_o,,
+Conditional flag setting during instruction execution.,ctrl_flag_set,,
+Instruction execution updates conditional flags.,ctrl_flag_set_i,,
+Floating-point instruction execution updates floating-point status and control registers.,ctrl_fpcsr_i,,
+Setting of floating-point control and status registers during floating-point instruction execution.,ctrl_fpcsr_set_i,,
+Output of floating-point rounding mode during floating-point instruction execution.,ctrl_fpu_round_mode_o,,

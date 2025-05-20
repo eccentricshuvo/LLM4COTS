@@ -1,0 +1,837 @@
+Net: branch_mispredict_i
+
+High-Level Event: Pipeline stall due to branch misprediction.
+
+Logical Summary & Reasoning: The branch_mispredict_i signal is triggered when the processor's branch prediction mechanism incorrectly predicts the outcome of a conditional branch instruction. This occurs when the actual branch condition does not match the predicted branch condition. The processor's branch prediction unit generates a misprediction signal when it detects a mismatch between the predicted and actual branch conditions. This signal is then used to stall the pipeline and flush any incorrectly fetched instructions. The misprediction signal is a result of a dependency chase that involves the branch condition, the predicted branch condition, and the actual branch condition.
+
+Test-Stimulus Guidance: To provoke a branch misprediction, software can use a combination of conditional branch instructions with unpredictable branch conditions. For example, a loop that conditionally branches based on a variable that is updated within the loop can create a situation where the branch predictor is likely to mispredict the branch. Additionally, using a mix of taken and not-taken branches can also increase the likelihood of misprediction. The test stimulus can also include a sequence of instructions that updates the condition codes, followed by a conditional branch instruction.
+
+Instruction Categories: The instructions that influence the branch_mispredict_i signal can be grouped into the following categories: 
+1. Conditional branch instructions (e.g., beq, bne, blt, etc.)
+2. Instructions that update condition codes (e.g., add, sub, cmp, etc.)
+3. Instructions that affect the branch predictor's state (e.g., instructions that update the branch target buffer) 
+These instruction categories can be combined in a test program to create a scenario that provokes a branch misprediction, resulting in a pipeline stall.
+
+Net: checking
+
+High-Level Event: Instruction execution triggers a check for setting the condition register flags.
+
+Logical Summary & Reasoning: The signal "checking" is related to the execution of instructions that involve setting the condition register flags. It depends on the operation being performed (e.g., arithmetic, logical, or control flow) and the state of the processor (e.g., whether an exception is pending). The signal is influenced by the processor's control unit, which determines the type of operation to be performed and whether flags should be updated accordingly.
+
+Test-Stimulus Guidance: To provoke the "checking" signal, software can execute instructions that affect the condition register flags, such as arithmetic and logical operations, conditional branches, and control flow instructions. For example, executing an arithmetic instruction that sets a flag, followed by a conditional branch, can trigger the "checking" signal. Additionally, testing exception handling mechanisms, such as exception generation and handling, can also trigger the "checking" signal.
+
+Instruction Categories: The "checking" signal is influenced by the following categories of instructions: 
+- Arithmetic instructions (e.g., add, subtract, multiply, divide)
+- Logical instructions (e.g., AND, OR, XOR)
+- Control flow instructions (e.g., branch, jump)
+- Exception-related instructions (e.g., trap, exception handling)
+- Flag-setting instructions (e.g., setting condition codes)
+
+Net: cpu_stall
+
+High-Level Event: Pipeline stall due to dependency on a previous instruction.
+
+Logical Summary & Reasoning: The cpu_stall signal is influenced by the presence of a debug unit feature. However, when this feature is not enabled (i.e., set to NONE), the cpu_stall signal is determined by other factors not explicitly related to the debug unit. At a high level, this signal is related to the processor's need to pause instruction execution due to dependencies between instructions, such as waiting for the result of a previous instruction to be available. This can occur when an instruction relies on the outcome of a preceding instruction that has not yet completed, causing the pipeline to stall.
+
+Test-Stimulus Guidance: To provoke a pipeline stall, software can execute a sequence of instructions where a later instruction depends on the result of an earlier instruction that has a longer latency, such as a load instruction followed by an instruction that uses the loaded data. Another approach is to use instructions with variable latency, such as division or floating-point operations, which can cause the pipeline to stall if the result is needed immediately by a subsequent instruction.
+
+Instruction Categories: Instructions that can influence the cpu_stall signal can be grouped into categories such as: 
+- Load instructions followed by instructions that depend on the loaded data.
+- Instructions with variable latency (e.g., division, floating-point operations) that are followed by instructions that rely on their results.
+- Instructions that modify registers or memory locations that are also used by subsequent instructions, potentially causing operand hazards.
+
+Net: ctrl_alu_result_i
+
+High-Level Event: The ALU result is being generated and will be used to update the architectural state.
+
+Logical Summary & Reasoning: The ctrl_alu_result_i signal is generated based on the operation being performed in the ALU, which can be a logical operation, a move operation, an extension operation, a multiplication operation, or a division operation. The signal is also influenced by the immediates and operands being used in the operation. The ALU result is then used to update the architectural state, which includes the registers and the program counter. The generation of the ALU result is a critical step in the execution of an instruction and is a key component of the processor's pipeline.
+
+Test-Stimulus Guidance: To test the ctrl_alu_result_i signal, a variety of instructions can be used, including arithmetic instructions, logical instructions, and load/store instructions. The instructions should be crafted to exercise the different operations that can be performed by the ALU, such as addition, subtraction, multiplication, and division. Additionally, the instructions should be designed to test the use of immediates and operands in the operations. For example, a test program could include a series of arithmetic instructions that use different immediates and operands, followed by a load instruction that uses the result of the arithmetic instructions.
+
+Instruction Categories: The instructions that influence the ctrl_alu_result_i signal can be categorized into the following groups:
+* Arithmetic instructions (e.g. add, sub, mul, div)
+* Logical instructions (e.g. and, or, xor)
+* Move instructions (e.g. mov)
+* Load/store instructions (e.g. load, store)
+* Immediate instructions (e.g. addi, subi)
+These instructions can be used to test the different operations that can be performed by the ALU and to verify that the ctrl_alu_result_i signal is being generated correctly.
+
+Net: ctrl_branch_except_pc_o
+
+High-Level Event: The program counter is updated to handle a branch exception.
+
+Logical Summary & Reasoning: The signal ctrl_branch_except_pc_o is related to the program counter update when a branch exception occurs. This happens when the CPU encounters an exception, such as an invalid instruction or a system call, and needs to transfer control to an exception handler. The program counter is updated to point to the exception handler, which is typically located at a specific address. The ctrl_branch_except_pc_o signal is used to determine the new program counter value, which is either the address of the exception handler or the address of the instruction that caused the exception.
+
+Test-Stimulus Guidance: To test this signal, a software engineer can write a C program that intentionally triggers a branch exception, such as by executing an invalid instruction or making a system call. The program can then verify that the program counter is updated correctly to point to the exception handler. This can be done by using a debugger to step through the code and examine the program counter value after the exception occurs.
+
+Instruction Categories: The instructions that can influence this signal include:
+* Branch instructions (e.g. beq, bne, blt, etc.)
+* System calls (e.g. syscall instruction)
+* Invalid instructions (e.g. undefined opcode)
+* Instructions that trigger exceptions (e.g. divide by zero, page fault, etc.)
+These instructions can cause a branch exception to occur, which in turn updates the program counter to point to an exception handler.
+
+Net: ctrl_branch_exception_o
+
+High-Level Event: The processor encounters an exception while executing a branch instruction, requiring a control flow change.
+
+Logical Summary & Reasoning: The `ctrl_branch_exception_o` signal is asserted when the processor encounters an exception during the execution of a branch instruction. This occurs when the `mor1kx_cpu_cappuccino_exception_r` signal is high, indicating an exception has been detected, or when the `mor1kx_cpu_cappuccino_ctrl_op_rfe_i` signal is high, indicating a return from exception (RFE) instruction is being executed. Additionally, the `mor1kx_cpu_cappuccino_doing_rfe` signal is also considered, which indicates that the processor is currently handling an RFE instruction. The signal is only asserted if the `mor1kx_cpu_cappuccino_exception_taken` signal is low, indicating that the exception has not been taken yet. This suggests that the processor is in the process of handling an exception related to a branch instruction.
+
+Test-Stimulus Guidance: To provoke this event, a software engineer can write a test program that executes a branch instruction, such as a jump or a conditional branch, and simultaneously triggers an exception, such as a division by zero or an invalid memory access. The test program should also ensure that the exception is not immediately taken, allowing the `ctrl_branch_exception_o` signal to be asserted.
+
+Instruction Categories: The instructions that can influence this signal include:
+* Branch instructions (e.g., jump, conditional branch)
+* Return from exception (RFE) instructions
+* Instructions that can trigger exceptions (e.g., division by zero, invalid memory access)
+* Instructions that can affect the processor's control flow (e.g., interrupts, traps)
+
+Net: ctrl_bubble_o
+
+High-Level Event: Pipeline stall on operand hazard.
+
+Logical Summary & Reasoning: The signal ctrl_bubble_o is related to the insertion of bubbles in the pipeline due to operand hazards. This occurs when an instruction is dependent on the result of a previous instruction that has not yet completed. The signal is influenced by various conditions such as load and store operations, multiplier operations, and jump instructions. The processor checks for these conditions and inserts a bubble in the pipeline to prevent incorrect results. This is achieved by the processor's decode and execute stages, which monitor the instruction dependencies and stall the pipeline when necessary.
+
+Test-Stimulus Guidance: To provoke this event, a test program can be written to include instructions that have dependencies on each other, such as a load instruction followed by an instruction that uses the loaded data. Additionally, instructions that use the multiplier or have jump targets can also trigger this event. For example, a test program can include a sequence of instructions like: load, add (using the loaded data), multiply, and jump. The program can also include data dependencies, such as loading data and then using it in a subsequent instruction.
+
+Instruction Categories: The types of instructions that influence this signal can be grouped into the following categories:
+- Load and store instructions: Instructions that access memory, such as load and store operations.
+- Arithmetic and logical instructions: Instructions that perform arithmetic and logical operations, such as add, subtract, multiply, and divide.
+- Jump and branch instructions: Instructions that transfer control to a different part of the program, such as jump and branch instructions.
+- Instructions that use the multiplier: Instructions that use the multiplier, such as multiply and divide instructions.
+- Instructions with dependencies: Instructions that have dependencies on each other, such as instructions that use the result of a previous instruction.
+
+Net: ctrl_carry_clear_i
+
+High-Level Event: The processor clears the carry flag after executing an instruction that does not set the carry flag.
+
+Logical Summary & Reasoning: The signal ctrl_carry_clear_i is related to the carry flag in the processor. It is set when the processor executes an instruction that does not set the carry flag, such as an addition or multiplication operation that does not result in an overflow. The signal is also influenced by the instruction opcode and the type of operation being performed. The processor's decode stage determines whether the instruction will set the carry flag, and if not, the ctrl_carry_clear_i signal is asserted to clear the carry flag.
+
+Test-Stimulus Guidance: To provoke the high-level event, a software engineer can write a test program that executes a sequence of instructions that do not set the carry flag, such as a series of addition or multiplication operations that do not result in an overflow. The test program can also include instructions that explicitly clear the carry flag to verify that the processor is correctly responding to the ctrl_carry_clear_i signal.
+
+Instruction Categories: The instructions that influence the ctrl_carry_clear_i signal can be grouped into the following categories: 
+- Arithmetic instructions that do not set the carry flag, such as addition and multiplication operations that do not result in an overflow.
+- Instructions that explicitly clear the carry flag.
+- Instructions that are not related to arithmetic operations, such as load and store instructions, which do not affect the carry flag.
+- Instructions that set the carry flag, such as addition and multiplication operations that result in an overflow, which will not assert the ctrl_carry_clear_i signal.
+
+Net: ctrl_carry_o
+
+High-Level Event: The carry flag is set or cleared based on the result of an arithmetic operation.
+
+Logical Summary & Reasoning: The signal ctrl_carry_o is influenced by the result of arithmetic operations, such as addition, multiplication, and division. The carry flag is set when an operation results in a carry or overflow, and cleared when an operation does not result in a carry or overflow. The signal is also dependent on the FEATURE_CARRY_FLAG, which indicates whether the carry flag is enabled or not. The control logic for the carry flag is distributed across multiple stages of the pipeline, including the decode, execute, and writeback stages.
+
+Test-Stimulus Guidance: To provoke the carry flag being set or cleared, a test program can include arithmetic operations that result in a carry or overflow, such as adding two large numbers or multiplying two numbers that result in a large product. The test program can also include operations that clear the carry flag, such as subtracting a large number from a smaller number. The test program can use conditional statements to check the state of the carry flag after each operation.
+
+Instruction Categories: The instructions that influence the ctrl_carry_o signal can be grouped into the following categories:
+* Arithmetic instructions: add, sub, mul, div
+* Bitwise instructions: and, or, xor
+* Load and store instructions: ld, st
+* Control flow instructions: beq, bne, blt, bgt
+* Flag-setting instructions: setc, clrc
+Note that the specific instructions that influence the ctrl_carry_o signal may vary depending on the instruction set architecture (ISA) being used.
+
+Net: ctrl_carry_set_i
+
+High-Level Event: The processor sets the carry flag as a result of an arithmetic operation.
+
+Logical Summary & Reasoning: The signal ctrl_carry_set_i is related to the setting of the carry flag in the processor. This flag is set when an arithmetic operation, such as addition or multiplication, results in a carry or overflow. The signal is influenced by the type of operation being performed, as well as the result of the operation. In particular, the signal is set when the result of an addition or multiplication operation exceeds the maximum value that can be represented by the processor's registers. The setting of this flag can be used by software to determine the result of arithmetic operations and to handle overflow or carry conditions.
+
+Test-Stimulus Guidance: To provoke the setting of the carry flag, software can perform arithmetic operations that result in a carry or overflow. For example, adding two large numbers that result in a value greater than the maximum value that can be represented by the processor's registers will set the carry flag. Similarly, multiplying two large numbers that result in a value greater than the maximum value that can be represented by the processor's registers will also set the carry flag. Software can use instructions such as ADD, SUB, MUL, and DIV to provoke the setting of the carry flag.
+
+Instruction Categories: The instructions that influence the setting of the carry flag can be grouped into the following categories: 
+- Arithmetic instructions: ADD, SUB, MUL, DIV
+- Bitwise instructions: AND, OR, XOR
+- Load and store instructions: LD, ST
+- Control flow instructions: BR, BEQ, BNE
+Note that not all instructions in these categories will influence the setting of the carry flag, but rather those that perform arithmetic operations or modify the flags register.
+
+Net: ctrl_delay_slot
+
+High-Level Event: Pipeline delay slot insertion due to a branch instruction.
+
+Logical Summary & Reasoning: The ctrl_delay_slot signal is set when a branch instruction is encountered, and the pipeline needs to be delayed to accommodate the branch. This happens when the mor1kx_cpu_cappuccino_padv_execute_o signal is true, indicating that a branch instruction is being executed. The signal is also influenced by the mor1kx_cpu_cappuccino_execute_op_branch_i signal, which is set when a branch instruction is decoded. The combination of these signals indicates that a branch instruction is being executed, and the pipeline needs to be delayed to ensure correct execution.
+
+Test-Stimulus Guidance: To provoke this event, software can use a test program that includes a branch instruction, such as a jump or a conditional branch, followed by a dependent instruction that relies on the result of the branch. For example, a test program can include a sequence of instructions like "beq $t0, $t1, label" followed by "add $t2, $t3, $t4", where the add instruction depends on the result of the branch. This will trigger the pipeline delay slot insertion, allowing the dependent instruction to be executed correctly.
+
+Instruction Categories: The types of instructions that influence this signal can be grouped into the following categories: 
+- Branch instructions (e.g., beq, bne, jal, jr)
+- Instructions that rely on the result of a branch (e.g., dependent loads, stores, or arithmetic instructions)
+- Instructions that modify the pipeline state (e.g., pipeline flush, stall, or delay instructions)
+
+Net: ctrl_epcr_o
+
+High-Level Event: The processor encounters an exception or a branch instruction that requires a change in the program counter.
+
+Logical Summary & Reasoning: The ctrl_epcr_o signal is related to the program counter (PC) and is influenced by various conditions such as exceptions, branch instructions, and delay slots. The signal is used to determine the next PC value based on these conditions. The dependencies include the current PC value, exception flags, branch instructions, and delay slot status. The micro-architectural role of this signal is to manage the PC update logic, which is a critical aspect of instruction execution. At the architectural level, this signal is related to the handling of exceptions and branch instructions, which are essential for program control flow.
+
+Test-Stimulus Guidance: To provoke this event, a test program can be written to include instructions that trigger exceptions or branch instructions. For example, a program can include a division by zero instruction to trigger an exception or a branch instruction with a conditional flag to test the delay slot handling. The program can also include a mix of instructions that exercise the PC update logic, such as jumps, calls, and returns.
+
+Instruction Categories: The instructions that influence this signal can be grouped into the following categories:
+* Exception-generating instructions (e.g., division by zero, invalid opcode)
+* Branch instructions (e.g., jump, call, return)
+* Delay slot instructions (e.g., instructions that follow a branch instruction)
+* PC-update instructions (e.g., instructions that modify the PC value, such as jumps or calls)
+
+Net: ctrl_flag_clear
+
+High-Level Event: The processor clears a flag after executing a specific instruction.
+
+Logical Summary & Reasoning: The signal ctrl_flag_clear is generated based on the result of an arithmetic or comparison operation. It is set when the result of the operation is not equal to zero or when a specific condition is met. The signal is used to clear a flag in the processor's status register. This flag is typically used to indicate the result of a previous operation, such as a comparison or arithmetic operation. The signal is generated in the execute stage of the pipeline and is used to update the flag in the status register.
+
+Test-Stimulus Guidance: To provoke this event, a test program can be written to execute a series of arithmetic or comparison instructions that set and clear the flag. For example, a program can execute a series of add, subtract, and compare instructions that set the flag, followed by an instruction that clears the flag. The program can then be executed and the flag can be checked to ensure that it is being set and cleared correctly.
+
+Instruction Categories: The instructions that influence this signal can be grouped into the following categories: 
+- Arithmetic instructions (e.g. add, subtract, multiply, divide)
+- Comparison instructions (e.g. equal, not equal, greater than, less than)
+- Logical instructions (e.g. and, or, not)
+- Flag-setting instructions (e.g. set flag on equal, set flag on not equal)
+- Flag-clearing instructions (e.g. clear flag)
+
+Net: ctrl_flag_clear_i
+
+High-Level Event: The processor clears a flag after executing a comparison or arithmetic operation.
+
+Logical Summary & Reasoning: The ctrl_flag_clear_i signal is related to the clearing of flags after executing certain instructions. The signal is influenced by the outcome of arithmetic and comparison operations, such as equality, less than, and greater than. The signal is also dependent on the type of operation being performed, such as addition, subtraction, and comparison. The clearing of flags is a critical aspect of instruction execution, as it affects the outcome of subsequent instructions that rely on the flags.
+
+Test-Stimulus Guidance: To trigger the ctrl_flag_clear_i signal, a test program can execute a series of instructions that involve arithmetic and comparison operations. For example, a program can execute a series of add, subtract, and compare instructions, followed by a branch instruction that relies on the flags. The test program can also include instructions that set and clear flags to test the functionality of the ctrl_flag_clear_i signal.
+
+Instruction Categories: The instructions that influence the ctrl_flag_clear_i signal can be grouped into the following categories:
+* Arithmetic instructions: add, subtract, multiply, divide
+* Comparison instructions: equal, less than, greater than
+* Branch instructions: conditional branch, unconditional branch
+* Flag-setting instructions: instructions that set or clear flags, such as compare and test instructions.
+
+Net: ctrl_flag_o
+
+High-Level Event: The processor sets a control flag based on the result of an arithmetic or comparison operation.
+
+Logical Summary & Reasoning: The control flag is set when the result of an operation meets certain conditions, such as equality, less than, or greater than. The flag is cleared when the operation does not meet these conditions or when a specific instruction is executed. The flag is influenced by the result of arithmetic and comparison operations, including addition, subtraction, and bitwise operations. The flag is also affected by the execution of specific instructions, such as those that set or clear the flag.
+
+Test-Stimulus Guidance: To provoke the control flag being set, software can execute instructions that perform arithmetic or comparison operations, such as ADD, SUB, CMP, or Branch instructions. For example, executing a CMP instruction with two equal operands will set the control flag. Executing an ADD instruction with two operands that result in a carry or overflow will also set the control flag. To provoke the control flag being cleared, software can execute instructions that clear the flag, such as a specific instruction that explicitly clears the flag.
+
+Instruction Categories: The control flag is influenced by the following categories of instructions:
+* Arithmetic instructions: ADD, SUB, MUL, DIV
+* Comparison instructions: CMP, CMPE, CMPL
+* Branch instructions: BEQ, BNE, BLT, BGT
+* Flag-setting instructions: specific instructions that set or clear the control flag
+* Flag-clearing instructions: specific instructions that clear the control flag
+
+Net: ctrl_flag_set
+
+High-Level Event: The processor sets a flag based on the result of an arithmetic or comparison operation.
+
+Logical Summary & Reasoning: The ctrl_flag_set signal is set when the result of an arithmetic or comparison operation meets certain conditions, such as equality, less than, or greater than. This signal is influenced by the op_setflag_i signal, which is generated by the decode stage of the pipeline. The op_setflag_i signal is set when the instruction is a compare or arithmetic operation that sets flags. The ctrl_flag_set signal is also influenced by the result of the arithmetic or comparison operation, which is generated by the execute stage of the pipeline.
+
+Test-Stimulus Guidance: To trigger the ctrl_flag_set signal, a test program can execute arithmetic or comparison operations that set flags, such as compare instructions or arithmetic instructions with set flag options. For example, a test program can execute a compare instruction with two equal operands to trigger the setting of the equality flag. Alternatively, a test program can execute an arithmetic instruction with a set flag option to trigger the setting of the corresponding flag.
+
+Instruction Categories: The instructions that can trigger the ctrl_flag_set signal include:
+* Compare instructions (e.g. cmp, cmpi)
+* Arithmetic instructions with set flag options (e.g. add, sub, mul)
+* Logical instructions with set flag options (e.g. and, or, xor)
+* Flag-setting instructions (e.g. setf, clf)
+
+Net: ctrl_flag_set_i
+
+High-Level Event: The processor sets a flag based on the result of an arithmetic or comparison operation.
+
+Logical Summary & Reasoning: The ctrl_flag_set_i signal is set when the result of an arithmetic or comparison operation meets certain conditions, such as equality, less than, or greater than. This signal is generated by the execution unit and is used to update the flags register. The conditions under which the flag is set are determined by the type of operation being performed, such as addition, subtraction, comparison, or bitwise operation. The flag is set based on the result of the operation, and the specific conditions are determined by the instruction being executed.
+
+Test-Stimulus Guidance: To provoke this event, a test program can include instructions that perform arithmetic or comparison operations, such as ADD, SUB, CMP, or BITWISE operations. The program can then check the flags register to verify that the flag has been set correctly. For example, a test program can perform a comparison operation and then check the flags register to verify that the equality flag has been set. The test program can also include instructions that perform arithmetic operations and then check the flags register to verify that the overflow or carry flag has been set.
+
+Instruction Categories: The instructions that can influence this signal include:
+* Arithmetic instructions: ADD, SUB, MUL, DIV
+* Comparison instructions: CMP, CMPEQ, CMPNE, CMPLT, CMPGT
+* Bitwise instructions: AND, OR, XOR, NOT
+* Flag-setting instructions: SETF, CLRF
+These instructions can be used to provoke the ctrl_flag_set_i signal and verify that the flags register is updated correctly.
+
+Net: ctrl_fpcsr_i
+
+High-Level Event: Floating-point operation completion signal.
+
+Logical Summary & Reasoning: The ctrl_fpcsr_i signal is related to the completion of floating-point operations. It is influenced by the presence of a Floating-Point Unit (FPU) and the destination of the operation. If the FPU is present, the signal is asserted when the operation is completed. If the FPU is not present, the signal is not asserted. The signal is also affected by the reset condition, where it is cleared when the system is reset.
+
+Test-Stimulus Guidance: To provoke this signal, a test program can include floating-point operations such as additions, subtractions, multiplications, and divisions. The program can also include conditional statements that depend on the result of the floating-point operations, which can help to verify the correctness of the signal. Additionally, the program can include a mix of integer and floating-point operations to test the interaction between the two.
+
+Instruction Categories: The instructions that influence this signal can be grouped into the following categories: 
+- Floating-point arithmetic instructions (e.g., add, subtract, multiply, divide)
+- Floating-point comparison instructions (e.g., equal, not equal, greater than, less than)
+- Floating-point load and store instructions (e.g., load float, store float)
+- Integer instructions that interact with floating-point operations (e.g., move integer to float, move float to integer)
+
+Net: ctrl_fpcsr_set_i
+
+High-Level Event: Floating-point status register update.
+
+Logical Summary & Reasoning: The signal ctrl_fpcsr_set_i is related to updating the floating-point status register. This signal is influenced by the presence of a floating-point unit (FPU) in the processor. When an FPU is present, the signal is set based on the destination of an instruction. If no FPU is present or the processor is in reset, the signal is either cleared or set based on the destination. This suggests that the signal is trying to achieve the updating of the floating-point status register, which is a micro-architectural role. From an architectural perspective, this translates to the event of updating the floating-point status register.
+
+Test-Stimulus Guidance: To provoke the event of updating the floating-point status register, software can execute floating-point instructions that modify the status register, such as floating-point arithmetic operations or comparisons. Additionally, software can use instructions that explicitly update the status register, if available. The specific instructions used will depend on the instruction set architecture (ISA) being targeted.
+
+Instruction Categories: The types of instructions that influence the ctrl_fpcsr_set_i signal can be grouped into categories such as: 
+- Floating-point arithmetic instructions (e.g., addition, subtraction, multiplication, division)
+- Floating-point comparison instructions (e.g., equal, less than, greater than)
+- Instructions that explicitly update the floating-point status register (if available)
+- Instructions that implicitly update the floating-point status register as a side effect of their execution.
+
+Net: ctrl_fpu_round_mode_o
+
+High-Level Event: Floating-point rounding mode control signal is asserted, indicating a change in the rounding mode for floating-point operations.
+
+Logical Summary & Reasoning: The ctrl_fpu_round_mode_o signal is dependent on the presence of a Floating-Point Unit (FPU) in the system. When the FPU is enabled, this signal is used to control the rounding mode for floating-point operations. The signal is asserted when the FPU is configured to use a specific rounding mode, which is determined by the dest signal. The presence of the FPU is indicated by the mor1kx_cpu_cappuccino_FEATURE_FPU signal, which is set to NONE when the FPU is not available. The ctrl_fpu_round_mode_o signal is used to manage the rounding mode for floating-point operations, ensuring that the results are accurate and consistent.
+
+Test-Stimulus Guidance: To provoke the ctrl_fpu_round_mode_o signal, software engineers can write C test programs that perform floating-point operations with different rounding modes. This can be achieved by using compiler directives or inline assembly code to set the rounding mode before performing floating-point operations. For example, using the `fegetround` and `fesetround` functions in C to get and set the rounding mode, respectively. By changing the rounding mode and performing floating-point operations, the ctrl_fpu_round_mode_o signal can be asserted, allowing engineers to test and verify its behavior.
+
+Instruction Categories: The types of instructions that influence the ctrl_fpu_round_mode_o signal include:
+* Floating-point arithmetic instructions (e.g., add, subtract, multiply, divide)
+* Floating-point comparison instructions (e.g., equal, not equal, greater than, less than)
+* Rounding mode control instructions (e.g., setting the rounding mode to nearest, zero, positive infinity, or negative infinity)
+* Floating-point load and store instructions (e.g., loading a floating-point value from memory or storing a floating-point result in memory)
+
+Net: ctrl_overflow_clear_i
+
+High-Level Event: The processor clears an overflow condition that occurred during an arithmetic operation.
+
+Logical Summary & Reasoning: The ctrl_overflow_clear_i signal is related to the handling of overflow conditions during arithmetic operations. The signal is asserted when the processor needs to clear an overflow condition that occurred during an operation such as addition, multiplication, or division. This is likely to happen when the result of an operation exceeds the maximum value that can be represented by the processor's registers. The signal is influenced by the type of operation being performed, the operands, and the current state of the processor. The processor's decode and execute stages are involved in generating this signal, and it is used to control the clearing of the overflow condition.
+
+Test-Stimulus Guidance: To provoke the ctrl_overflow_clear_i signal, a software engineer can write a test program that performs arithmetic operations that are likely to cause an overflow. For example, adding two large numbers that exceed the maximum value that can be represented by the processor's registers, or multiplying two numbers that result in an overflow. The test program can also include instructions that check the overflow condition and clear it when necessary.
+
+Instruction Categories: The instructions that influence the ctrl_overflow_clear_i signal can be grouped into the following categories: 
+- Arithmetic instructions: addition, subtraction, multiplication, and division
+- Instructions that check and clear the overflow condition: such as conditional moves, branches, and load/store operations that depend on the overflow condition
+- Instructions that affect the processor's state: such as load immediate, move, and store operations that can influence the operands and results of arithmetic operations.
+
+Net: ctrl_overflow_set_i
+
+High-Level Event: Arithmetic operation results in an overflow.
+
+Logical Summary & Reasoning: The signal ctrl_overflow_set_i is set when an arithmetic operation, such as addition or multiplication, results in a value that exceeds the maximum representable value for the given data type. This occurs when the FEATURE_OVERFLOW flag is enabled and the operation is performed on signed numbers. The signal is influenced by the op_add_i, op_mul_signed_i, and op_div_signed_i signals, which indicate the type of arithmetic operation being performed. The overflow condition is detected in the execute stage of the pipeline.
+
+Test-Stimulus Guidance: To provoke this event, software can execute arithmetic operations that result in overflows, such as adding two large numbers or multiplying two numbers that result in a value greater than the maximum representable value. For example, in C code, the following operations could trigger this event: `int x = INT_MAX; x += 1;` or `int y = INT_MAX; y *= 2;`. Additionally, operations that involve division by zero or other exceptional conditions may also trigger this event.
+
+Instruction Categories: The instructions that influence this signal can be grouped into the following categories: 
+- Arithmetic instructions: add, sub, mul, div
+- Bitwise instructions: and, or, xor
+- Comparison instructions: cmp, test
+- Load and store instructions: load, store
+- Control flow instructions: branch, jump
+- Exceptional instructions: divide by zero, overflow. 
+Note that not all instructions in these categories will trigger the ctrl_overflow_set_i signal, but they are the types of instructions that can influence its value.
+
+Net: ctrl_rfb_i
+
+High-Level Event: Operand fetch for instruction execution.
+
+Logical Summary & Reasoning: The signal ctrl_rfb_i is related to the operand fetch for instruction execution. It is controlled by the execute stage of the pipeline and is used to fetch operands from the register file. The dependency chase reveals that the signal is influenced by the decode stage, which determines the operands required for the instruction. The micro-architectural role of this signal is to manage the flow of operands to the execution stage, ensuring that the correct data is available for processing. At the architectural level, this signal corresponds to the event of fetching operands for instruction execution, which is a critical step in the instruction pipeline.
+
+Test-Stimulus Guidance: To provoke this event, a test program can be written to execute a series of instructions that require operand fetch, such as load and store operations, or arithmetic instructions with register operands. The program can be designed to stress the operand fetch mechanism, for example, by using a large number of registers or by executing instructions with complex operand dependencies.
+
+Instruction Categories: The instructions that influence this signal can be grouped into the following categories:
+* Load and store instructions: These instructions require operand fetch to access memory locations.
+* Arithmetic and logical instructions: These instructions require operand fetch to access register operands.
+* Control-flow instructions: These instructions may require operand fetch to determine the next instruction address.
+* Instructions with complex operand dependencies: These instructions may require multiple operand fetches or have specific operand ordering requirements.
+
+Net: ctrl_valid_i
+
+High-Level Event: The pipeline proceeds with instruction execution without stalling due to operand or resource hazards.
+
+Logical Summary & Reasoning: The `ctrl_valid_i` signal is influenced by the absence of stalls in the execution pipeline stage, which can occur due to various reasons such as load or store operations without valid data, msync operations with stall, or mfspr and mtspr operations without acknowledgment. The signal is also dependent on the type of instruction being executed, including load and store operations, and the availability of resources such as the LSU (Load/Store Unit). The execution of instructions is controlled by the decode stage, which generates signals such as `decode_op_lsu_load_o` based on the instruction opcode and other factors. The overall logic can be summarized as the pipeline proceeding with instruction execution when there are no stalls or hazards, and the `ctrl_valid_i` signal is asserted when the execution stage is ready to process the instruction without any stalls.
+
+Test-Stimulus Guidance: To provoke the `ctrl_valid_i` signal, software can execute a sequence of instructions that do not cause stalls or hazards, such as a series of arithmetic operations or load and store operations with valid data. Additionally, software can test the signal by inserting instructions that may cause stalls, such as msync or mfspr/mtspr operations, and verifying that the pipeline stalls as expected. The test stimulus should also consider the instruction type and the availability of resources such as the LSU.
+
+Instruction Categories: The instructions that influence the `ctrl_valid_i` signal can be grouped into the following categories: 
+- Load and store operations (e.g., lw, sw)
+- Arithmetic and logical operations (e.g., add, and)
+- Synchronization operations (e.g., msync)
+- Special-purpose register access operations (e.g., mfspr, mtspr)
+- Control-flow operations (e.g., branch, jump) 
+These instruction categories can be used to create test programs that exercise the `ctrl_valid_i` signal and verify its behavior under different scenarios.
+
+Net: decode_valid_i
+
+High-Level Event: Instruction decode is valid and can proceed to the next stage of the pipeline.
+
+Logical Summary & Reasoning: The `decode_valid_i` signal is dependent on several root signals, including `fetch_valid_i`, `execute_waiting`, `decode_execute_halt`, `cpu_stall`, `stepping`, and `pstep`. The signal is generated based on the combination of these inputs, indicating whether the decode stage can proceed with the instruction. The micro-architectural role of this signal is to control the flow of instructions through the pipeline, ensuring that the decode stage only proceeds when the necessary conditions are met. At the architectural level, this translates to the event of a pipeline stall on operand hazard, where the instruction cannot be decoded due to dependencies on previous instructions.
+
+Test-Stimulus Guidance: To provoke this event, software can be designed to create a dependency chain of instructions, where an instruction relies on the result of a previous instruction that has not yet completed. For example, a sequence of load, arithmetic, and store instructions can be used to create a dependency chain, where the store instruction relies on the result of the arithmetic instruction, which in turn relies on the result of the load instruction. By carefully crafting such a sequence, the `decode_valid_i` signal can be triggered, causing a pipeline stall.
+
+Instruction Categories: The types of instructions that can influence this signal include:
+* Load instructions: Instructions that load data from memory, which can cause a stall if the data is not yet available.
+* Arithmetic instructions: Instructions that perform arithmetic operations, which can rely on the results of previous instructions.
+* Store instructions: Instructions that store data to memory, which can rely on the results of previous instructions.
+* Control-flow instructions: Instructions that change the flow of execution, such as branches or jumps, which can affect the pipeline flow.
+* Memory-access instructions: Instructions that access memory, such as loads or stores, which can cause stalls due to memory access times.
+
+Net: doing_rfe
+
+High-Level Event: The processor is executing a return-from-exception instruction.
+
+Logical Summary & Reasoning: The doing_rfe signal is set when the processor is executing a return-from-exception instruction. This occurs when the padv_ctrl signal is high and the ctrl_op_rfe_i signal is also high, indicating that the current instruction is a return-from-exception instruction. The padv_ctrl signal is controlled by the decode_valid_i, execute_waiting, and fetch_valid_i signals, which ensure that the instruction is valid and ready to be executed. The ctrl_op_rfe_i signal is set by the decode_op_rfe_i signal, which is generated by the decoder when it encounters a return-from-exception instruction. The doing_rfe signal is also influenced by the deassert_doing_rfe signal, which is used to clear the doing_rfe signal when the return-from-exception instruction is completed.
+
+Test-Stimulus Guidance: To provoke this event, a test program can be written to execute a return-from-exception instruction. This can be done by first generating an exception, such as a division by zero or an invalid instruction, and then executing a return-from-exception instruction to return to the normal execution flow. The test program can also include instructions that test the handling of return-from-exception instructions, such as checking the value of the program counter and the registers after the return-from-exception instruction is executed.
+
+Instruction Categories: The instruction categories that influence the doing_rfe signal include:
+* Return-from-exception instructions (e.g. RFE)
+* Instructions that generate exceptions (e.g. division by zero, invalid instruction)
+* Instructions that test the handling of return-from-exception instructions (e.g. loads, stores, branches)
+
+Net: doing_rfe_o
+
+High-Level Event: The processor is handling a return from exception instruction.
+
+Logical Summary & Reasoning: The `doing_rfe_o` signal is set when the processor is executing a return from exception instruction. This instruction is typically used to return control to the program after an exception has been handled. The signal is dependent on the `ctrl_op_rfe_i` signal, which indicates that a return from exception instruction is being executed, and the `padv_ctrl` signal, which indicates that the instruction is being executed in the correct pipeline stage. The signal is also dependent on the `deassert_doing_rfe` signal, which ensures that the signal is only set when the processor is actually handling a return from exception instruction.
+
+Test-Stimulus Guidance: To test the `doing_rfe_o` signal, a program can be written that includes a return from exception instruction. The program should be designed to trigger an exception, and then return from the exception handler using the return from exception instruction. The `doing_rfe_o` signal can be monitored to verify that it is set correctly when the return from exception instruction is executed.
+
+Instruction Categories: The instructions that can influence the `doing_rfe_o` signal include:
+* Return from exception instructions (e.g. RFE)
+* Instructions that trigger exceptions (e.g. divide by zero, page fault)
+* Instructions that are executed in the exception handler
+* Instructions that are used to return from the exception handler (e.g. RFE)
+
+Net: doing_rfe_r
+
+High-Level Event: The processor is executing a return-from-exception instruction, indicating the end of an exception handling routine.
+
+Logical Summary & Reasoning: The signal doing_rfe_r is related to the execution of a return-from-exception instruction. This instruction is typically used to return control to the main program flow after an exception has been handled. The signal is influenced by various control signals, including reset, pipeline flush, and operand availability. The root cause of this signal can be traced back to the decode stage of the pipeline, where the instruction opcode is checked to determine if it is a return-from-exception instruction. The signal is then propagated through the pipeline stages, ultimately controlling the execution of the return-from-exception instruction.
+
+Test-Stimulus Guidance: To provoke the doing_rfe_r signal, software can execute a sequence of instructions that includes an exception-generating instruction, followed by an exception handling routine, and finally a return-from-exception instruction. For example, a C program can use a combination of arithmetic operations, memory accesses, and system calls to generate an exception, and then use a return-from-exception instruction to return control to the main program flow. The specific instructions and sequence will depend on the target ISA and the desired exception handling behavior.
+
+Instruction Categories: The instructions that influence the doing_rfe_r signal can be grouped into the following categories: 
+1. Exception-generating instructions (e.g., division by zero, page faults)
+2. Exception handling instructions (e.g., saving registers, setting up exception handlers)
+3. Return-from-exception instructions (e.g., returning control to the main program flow)
+4. Control flow instructions (e.g., branches, jumps) that can affect the execution of the return-from-exception instruction.
+
+Net: du_access
+
+High-Level Event: Pipeline stall due to debug unit access.
+
+Logical Summary & Reasoning: The du_access signal is influenced by the presence of a debug unit feature. When this feature is enabled, the signal is dependent on the destination of an instruction, indicating that the pipeline may stall when accessing the debug unit. This suggests that the signal is related to the processor's ability to handle debug operations, and its purpose is to manage the flow of instructions when interacting with the debug unit. The boolean relation between the signals indicates that the debug unit feature must be enabled for the du_access signal to be active.
+
+Test-Stimulus Guidance: To provoke a pipeline stall due to debug unit access, software can use instructions that interact with the debug unit, such as setting breakpoints or accessing debug registers. Additionally, using instructions that have a high likelihood of causing a pipeline stall, such as load or store operations with dependencies on previous instructions, can also trigger this event. Test programs can be crafted to include these types of instructions and measure the performance impact of debug unit access on the pipeline.
+
+Instruction Categories: The types of instructions that influence the du_access signal can be grouped into categories such as: (1) debug operations (e.g. setting breakpoints, accessing debug registers), (2) load and store operations with dependencies on previous instructions, and (3) instructions that have a high likelihood of causing pipeline stalls (e.g. complex arithmetic operations, conditional branches). These instruction categories can be used to craft test programs that target the du_access signal and measure its impact on pipeline performance.
+
+Net: du_ack_o
+
+High-Level Event: Debug unit acknowledgement signal assertion indicates that a debug operation has been successfully executed.
+
+Logical Summary & Reasoning: The du_ack_o signal is related to the debug unit functionality, and its assertion signifies the completion of a debug operation. This signal is dependent on the presence of a debug unit feature, which is a configurable option in the processor. When the debug unit is enabled, the signal is asserted when a debug operation is successfully executed, indicating that the processor has acknowledged the debug request.
+
+Test-Stimulus Guidance: To provoke the assertion of the du_ack_o signal, software can use debug-related instructions or operations, such as setting breakpoints, single-stepping, or examining memory contents. The specific instructions used will depend on the ISA and the debug unit's capabilities. For example, a test program could use a combination of load and store instructions to trigger a breakpoint, which would then assert the du_ack_o signal when the breakpoint is hit.
+
+Instruction Categories: The instructions that can influence the du_ack_o signal can be grouped into the following categories: 
+- Debug-related instructions (e.g., setting breakpoints, single-stepping)
+- Memory access instructions (e.g., load, store) that can trigger a breakpoint or other debug events
+- Control-flow instructions (e.g., jump, branch) that can affect the execution of debug-related code.
+
+Net: du_addr_i
+
+High-Level Event: Instruction address calculation for data processing.
+
+Logical Summary & Reasoning: The du_addr_i signal is related to the calculation of an instruction's address for data processing. This signal is influenced by the instruction's opcode, operands, and the current program counter. The calculation of this address is crucial for the instruction's execution, as it determines where the data will be accessed or stored. From a micro-architectural perspective, this signal is trying to achieve the resolution of the instruction's memory access requirements.
+
+Test-Stimulus Guidance: To provoke this event, software engineers can craft test programs that include instructions with memory access, such as load, store, or atomic operations. The test programs should also include a variety of instruction types, such as arithmetic, logical, and control-flow instructions, to exercise the instruction address calculation logic. Additionally, the test programs can include instructions with different addressing modes, such as register indirect, immediate, or displacement addressing, to test the signal's behavior under various scenarios.
+
+Instruction Categories: The instruction categories that influence this signal include: 
+- Load and store instructions (e.g., lw, sw, lb, sb)
+- Arithmetic and logical instructions with memory access (e.g., addi, lw, sw)
+- Control-flow instructions with memory access (e.g., beq, bne)
+- Atomic operations (e.g., ll, sc)
+- Instructions with different addressing modes (e.g., register indirect, immediate, displacement addressing)
+
+Net: du_dat_i
+
+High-Level Event: Operand data is being fetched for instruction execution.
+
+Logical Summary & Reasoning: The du_dat_i signal is related to the retrieval of operand data, which is a critical step in instruction execution. This signal is influenced by the operand width, which determines the amount of data being fetched. The signal's purpose is to facilitate the transfer of operand data to the execution stage, allowing the processor to perform the required operation. The dependency on operand width suggests that this signal is sensitive to the specific requirements of the instruction being executed.
+
+Test-Stimulus Guidance: To provoke this event, software engineers can write C code that performs arithmetic or logical operations, such as addition, subtraction, multiplication, or bitwise operations, which require operand data to be fetched. Additionally, using load and store instructions can also trigger this event, as they involve retrieving data from memory. Using different data types, such as integers or floating-point numbers, can also help to exercise this signal.
+
+Instruction Categories: The types of instructions that influence this signal can be grouped into the following categories: 
+- Arithmetic instructions (e.g., add, sub, mul, div)
+- Logical instructions (e.g., and, or, xor)
+- Load and store instructions (e.g., lw, sw, lb, sb)
+- Data transfer instructions (e.g., mov, mv)
+
+Net: du_dat_o
+
+High-Level Event: Data is being output from the debug unit.
+
+Logical Summary & Reasoning: The du_dat_o signal is related to the output of data from a debug unit, which is only enabled when the debug unit feature is not set to NONE. This implies that the signal is involved in the process of debugging and is dependent on the configuration of the debug unit. From an architectural perspective, this signal is trying to achieve the transfer of data from the debug unit to other parts of the system, which is a key aspect of the debugging process.
+
+Test-Stimulus Guidance: To provoke this event, software engineers can write test programs that utilize debugging operations, such as setting breakpoints, inspecting registers, or tracing execution. Additionally, they can use instructions that interact with the debug unit, such as loading or storing data from the debug unit. The test programs should be designed to exercise the debug unit's functionality, which will trigger the output of data from the debug unit.
+
+Instruction Categories: The types of instructions that can influence this signal include debugging instructions, such as breakpoint instructions, register access instructions, and data transfer instructions. These instructions can be grouped into categories, including:
+- Debugging control instructions (e.g., setting breakpoints, enabling/disabling debugging)
+- Register access instructions (e.g., loading, storing, or inspecting registers)
+- Data transfer instructions (e.g., loading or storing data from the debug unit)
+- Tracing instructions (e.g., tracing execution, inspecting memory)
+
+Net: du_npc_write
+
+High-Level Event: Pipeline write operation to a non-program counter register is stalled due to a debug unit operation.
+
+Logical Summary & Reasoning: The signal du_npc_write is influenced by the presence of a debug unit feature in the processor. When the debug unit is enabled, the signal is dependent on the destination register of an instruction. This suggests that the signal is related to writing to a register as part of instruction execution. The fact that it is stalled due to a debug unit operation implies that the signal is involved in handling debug-related events, such as breakpoints or single-stepping, which can affect the normal flow of instruction execution.
+
+Test-Stimulus Guidance: To provoke this event, a test program can include instructions that write to non-program counter registers, such as arithmetic or load/store operations, while also enabling debug unit features like breakpoints or single-stepping. The program can then be executed with the debug unit enabled, and the signal's behavior can be observed. Additionally, the program can include instructions that trigger debug unit operations, such as executing a breakpointed instruction or accessing a memory location that triggers a watchpoint.
+
+Instruction Categories: The signal du_npc_write is influenced by instructions that write to non-program counter registers, such as:
+* Arithmetic instructions (e.g., add, subtract, multiply)
+* Load/store instructions (e.g., load word, store byte)
+* Register-transfer instructions (e.g., move, copy)
+* Debug-related instructions (e.g., breakpoint, watchpoint)
+
+Net: du_npc_written
+
+High-Level Event: Instruction completion is prevented due to an operand hazard.
+
+Logical Summary & Reasoning: The signal du_npc_written is influenced by the presence of a debug unit feature, but in this case, it is not enabled (FEATURE_DEBUGUNIT = NONE). As a result, the signal is dependent on the destination operand (dest) of an instruction. This suggests that the signal is related to the pipeline's ability to handle instructions that depend on the result of a previous instruction. When the signal is asserted, it indicates that the pipeline is unable to proceed with the execution of an instruction due to a dependency on an operand that has not yet been computed.
+
+Test-Stimulus Guidance: To provoke this event, a software engineer can write a test program that includes a sequence of instructions where the result of one instruction is used as an operand in a subsequent instruction. For example, a simple test program could include a series of arithmetic operations that depend on the result of a previous operation, such as "load A, 0; add B, A, 1; add C, B, 1". This type of sequence can trigger a pipeline stall due to an operand hazard, which would assert the du_npc_written signal.
+
+Instruction Categories: The types of instructions that influence this signal include load/store instructions, arithmetic instructions, and conditional branch instructions. These instructions can be grouped into categories such as:
+* Dependency-creating instructions (e.g., load, arithmetic operations)
+* Dependency-consuming instructions (e.g., arithmetic operations that depend on the result of a previous instruction)
+* Control-flow instructions (e.g., conditional branches that may be affected by the result of a previous instruction)
+
+Net: du_restart_from_stall
+
+High-Level Event: Pipeline restart due to debug unit stall.
+
+Logical Summary & Reasoning: The signal du_restart_from_stall is related to the restart of the pipeline after a stall caused by the debug unit. This occurs when the debug unit is enabled and a stall condition is met, requiring the pipeline to restart from the point of the stall. The logical summary of this signal is that it is dependent on the feature of the debug unit being enabled, and its purpose is to manage the pipeline's execution flow in the presence of debug-related stalls.
+
+Test-Stimulus Guidance: To provoke this event, a software engineer can write a C test program that includes a mix of instructions that trigger the debug unit, such as breakpoints or watchpoints, and instructions that cause the pipeline to stall, such as load instructions with dependencies on previous stores. The program should also include a loop or a sequence of instructions that can be restarted from the point of the stall, allowing the pipeline to restart and continue execution.
+
+Instruction Categories: The types of instructions that influence this signal can be grouped into categories such as: (1) debug-related instructions, including breakpoints, watchpoints, and step instructions; (2) load and store instructions that can cause pipeline stalls due to dependencies; and (3) control-flow instructions, such as branches and jumps, that can be affected by the restart of the pipeline.
+
+Net: du_restart_o
+
+High-Level Event: Pipeline restart due to debug unit intervention.
+
+Logical Summary & Reasoning: The signal du_restart_o is related to the debug unit's ability to intervene in the normal execution of the pipeline. When the debug unit is enabled and a specific condition is met, it can trigger a restart of the pipeline. This suggests that the signal is connected to the control logic of the pipeline and is used to handle debug-related events. The purpose of this signal is to allow the debug unit to take control of the pipeline and restart it when necessary, which is a micro-architectural role. At the architectural level, this translates to a pipeline restart event, which can be triggered by specific debug-related instructions or conditions.
+
+Test-Stimulus Guidance: To provoke this event, software engineers can use debug-related instructions or set specific flags that trigger the debug unit's intervention. This may involve using instructions that set breakpoints, single-step execution, or other debug-related operations. Additionally, specific sequences of instructions or data patterns may be used to trigger the debug unit's intervention and cause a pipeline restart.
+
+Instruction Categories: The types of instructions that can influence this signal include debug-related instructions, such as breakpoint setting, single-step execution, and other debug operations. Additionally, instructions that access specific registers or memory locations related to the debug unit may also trigger the pipeline restart event. These instruction categories can be grouped into: (1) debug instructions, (2) register access instructions, and (3) memory access instructions that interact with the debug unit.
+
+Net: du_restart_pc_o
+
+High-Level Event: Pipeline restart due to debug event.
+
+Logical Summary & Reasoning: The signal du_restart_pc_o is related to the restart of the pipeline, specifically when a debug event occurs. This signal is dependent on the presence of a debug unit feature in the processor. If the debug unit feature is enabled, the signal will be asserted, indicating that the pipeline needs to be restarted. The restart of the pipeline is a micro-architectural action that is taken to ensure that the processor's architectural state is corrected after a debug event. From an architectural perspective, this signal is related to the handling of exceptions or interrupts, where the processor needs to restart the pipeline to handle the exception or interrupt.
+
+Test-Stimulus Guidance: To provoke this event, software can use debug-related instructions or operations, such as setting breakpoints or watchpoints, to trigger a debug event. Additionally, software can use instructions that manipulate the program counter or exception handling registers to simulate a debug event. For example, a test program can set a breakpoint on a specific instruction and then execute that instruction to trigger a debug event, which would assert the du_restart_pc_o signal.
+
+Instruction Categories: The types of instructions that influence this signal can be grouped into categories such as: (1) debug-related instructions, such as setting breakpoints or watchpoints; (2) exception handling instructions, such as saving or restoring the program counter; and (3) control-flow instructions, such as jumps or branches, that can simulate a debug event. These instruction categories can be used to craft test programs that provoke the pipeline restart event.
+
+Net: du_stall_i
+
+High-Level Event: Pipeline stall due to data dependency hazard.
+
+Logical Summary & Reasoning: The du_stall_i signal is related to stalling the pipeline when there is a data dependency between instructions. This occurs when an instruction is dependent on the result of a previous instruction that has not yet been completed. The pipeline is stalled to prevent incorrect results from being generated. This is a common phenomenon in instruction-level parallelism, where the processor attempts to execute multiple instructions in a single clock cycle. The dependency chase reveals that the du_stall_i signal is influenced by the availability of operands and the completion of previous instructions.
+
+Test-Stimulus Guidance: To provoke this event, a test program can be written with a sequence of instructions that have data dependencies, such as loading a value, modifying it, and then using the modified value in a subsequent instruction. For example, a sequence like "load A, modify A, use A" can trigger a pipeline stall due to the data dependency hazard. The test program can also include instructions with varying latencies to exacerbate the data dependency and increase the likelihood of a pipeline stall.
+
+Instruction Categories: The instructions that influence this signal can be grouped into categories such as:
+- Load instructions: Instructions that load data from memory into registers.
+- Store instructions: Instructions that store data from registers into memory.
+- Arithmetic instructions: Instructions that perform arithmetic operations on register values.
+- Logical instructions: Instructions that perform logical operations on register values.
+- Control-flow instructions: Instructions that modify the program counter, such as branches and jumps.
+These categories can be combined in various ways to create test programs that provoke pipeline stalls due to data dependency hazards.
+
+Net: du_stall_o
+
+High-Level Event: Pipeline stall due to debug unit interaction.
+
+Logical Summary & Reasoning: The du_stall_o signal is related to the interaction between the processor's execution pipeline and the debug unit. When the debug unit is enabled and active, it can cause the pipeline to stall, leading to a delay in instruction execution. This signal is a result of the dependency between the debug unit's operation and the pipeline's execution, where the debug unit's activity can gate the pipeline's progress.
+
+Test-Stimulus Guidance: To provoke this pipeline stall event, a software engineer can write a test program that includes a mix of instructions that trigger debug unit activity, such as setting breakpoints or watching specific memory locations, followed by instructions that would normally execute quickly, such as simple arithmetic operations. By carefully crafting the sequence of instructions, the engineer can increase the likelihood of the pipeline stalling due to debug unit interaction.
+
+Instruction Categories: The types of instructions that influence this signal can be grouped into categories such as: (1) debug-related instructions, including those that set breakpoints, watchpoints, or trigger debug unit activity; (2) arithmetic and logical instructions that are likely to be executed quickly and may be stalled due to debug unit interaction; and (3) control-flow instructions, such as branches or jumps, that may be affected by the pipeline stall caused by the debug unit.
+
+Net: du_stb_i
+
+High-Level Event: Pipeline stall due to data dependency hazard.
+
+Logical Summary & Reasoning: The signal du_stb_i is related to the detection of data dependencies between instructions, which can cause a pipeline stall. This occurs when an instruction is dependent on the result of a previous instruction that has not yet been completed, requiring the pipeline to stall until the dependency is resolved. The signal is influenced by the instruction's operands and the current state of the pipeline, indicating a dependency between instructions that needs to be resolved before proceeding.
+
+Test-Stimulus Guidance: To provoke a pipeline stall due to a data dependency hazard, a test program can be written with a sequence of instructions that have dependencies between them, such as loading a value, modifying it, and then using the modified value in a subsequent instruction. For example, a sequence like "load A, modify A, use A" would create a dependency between the instructions, potentially causing a pipeline stall.
+
+Instruction Categories: The types of instructions that influence this signal can be grouped into categories such as:
+- Load instructions: Instructions that load data from memory into registers.
+- Store instructions: Instructions that store data from registers into memory.
+- Arithmetic and logical instructions: Instructions that perform operations on registers, such as addition, subtraction, and bitwise operations.
+- Control-flow instructions: Instructions that change the flow of execution, such as branches and jumps.
+
+Net: du_we_i
+
+High-Level Event: Pipeline stall due to data dependency on a load instruction.
+
+Logical Summary & Reasoning: The du_we_i signal is related to the write enable of the destination unit, which is influenced by the availability of operands for an instruction. When a load instruction is executed, the pipeline may stall if the data is not available immediately, causing a dependency on the load instruction. This stall is a result of the processor waiting for the data to be loaded before proceeding with the instruction, which is a common phenomenon in in-order execution architectures.
+
+Test-Stimulus Guidance: To provoke this pipeline stall, a software engineer can write a test program that includes a load instruction followed by an instruction that depends on the loaded data. For example, a sequence of instructions like "load R1, [R2]; add R3, R1, R4" can trigger this stall if the load instruction takes multiple cycles to complete. The engineer can also experiment with different types of load instructions, such as loading from a register or a memory location, to observe the effect on the pipeline.
+
+Instruction Categories: The instructions that influence this signal can be grouped into categories such as:
+- Load instructions (e.g., load register, load immediate)
+- Arithmetic and logical instructions (e.g., add, subtract, AND, OR)
+- Instructions that depend on the result of a load instruction (e.g., instructions that use the loaded data as an operand)
+- Instructions that can cause a pipeline stall due to data dependency (e.g., instructions with a high latency or instructions that access memory)
+
+Net: except_align_i
+
+High-Level Event: Alignment exception occurred during a load or store operation.
+
+Logical Summary & Reasoning: The `except_align_i` signal is triggered when an alignment exception occurs during a load or store operation. This happens when the `ctrl_op_lsu` signal is asserted, indicating a load or store operation, and the `align_err` signal is also asserted, indicating an alignment error. The `ctrl_op_lsu` signal is generated by the decode stage of the pipeline, and it is based on the opcode of the instruction being executed. The `align_err` signal is generated by the load/store unit, and it is based on the address being accessed. When both signals are asserted, the `except_align_i` signal is triggered, indicating an alignment exception.
+
+Test-Stimulus Guidance: To provoke an alignment exception, a test program can be written to perform a load or store operation with an address that is not properly aligned. For example, the program can load a 4-byte value from an address that is not a multiple of 4, or store a 4-byte value to an address that is not a multiple of 4. This will trigger the `except_align_i` signal, and the program can then handle the exception accordingly.
+
+Instruction Categories: Load and store instructions, such as `lw`, `sw`, `lh`, `sh`, `lb`, `sb`, etc. These instructions can trigger an alignment exception if the address being accessed is not properly aligned. Additionally, instructions that perform atomic operations, such as `ll`, `sc`, `amswap`, etc., can also trigger an alignment exception if the address being accessed is not properly aligned.
+
+Net: except_dbus_i
+
+High-Level Event: Exception due to invalid memory access or data bus error.
+
+Logical Summary & Reasoning: The except_dbus_i signal is triggered when an exception occurs due to an invalid memory access or a data bus error. This can happen when a load or store operation encounters an error, such as a page fault or a bus error. The signal is generated by the load/store unit (LSU) and is propagated to the control unit, which then handles the exception. The exception can be caused by a variety of factors, including invalid memory addresses, permission errors, or bus errors.
+
+Test-Stimulus Guidance: To provoke this exception, software can be written to perform load or store operations to invalid memory addresses, such as unmapped regions or regions with incorrect permissions. Additionally, software can be written to simulate bus errors by performing concurrent load and store operations to the same memory location. For example, a test program can be written in C to perform a load operation to an unmapped region of memory, which would trigger the exception.
+
+Instruction Categories: The instructions that can influence this signal include load and store instructions, such as lw, sw, lh, sh, lb, sb, etc. These instructions can be grouped into categories based on their memory access patterns, such as:
+* Load instructions: lw, lh, lb, etc.
+* Store instructions: sw, sh, sb, etc.
+* Memory access instructions with specific address modes: such as load and store instructions with offset addresses, or instructions that access memory-mapped I/O devices.
+
+Net: except_dpagefault_i
+
+High-Level Event: Page fault exception due to data access.
+
+Logical Summary & Reasoning: The except_dpagefault_i signal is triggered when a data page fault occurs, indicating that the processor is attempting to access a memory location that is not currently mapped or is protected. This event is rooted in the memory management unit's (MMU) inability to translate a virtual address to a physical address, resulting in an exception. The signal is influenced by the pipeline's ability to handle exceptions and the current state of the memory subsystem. The processor's control unit plays a crucial role in detecting and handling this exception, which can be caused by various factors such as invalid memory access, protection violations, or unimplemented memory regions.
+
+Test-Stimulus Guidance: To provoke a page fault exception due to data access, software can attempt to access memory locations that are not mapped or are protected. This can be achieved through various means, such as dereferencing a null or uninitialized pointer, accessing memory locations outside the program's allocated memory space, or attempting to write to a read-only memory region. Additionally, software can intentionally trigger a page fault by accessing a memory location that is known to be unmapped or protected, allowing the processor to handle the exception and take corrective action.
+
+Instruction Categories: The instructions that can influence the except_dpagefault_i signal can be grouped into the following categories: 
+- Memory access instructions (e.g., load, store, move) that can trigger a page fault exception due to invalid or protected memory access.
+- Pointer manipulation instructions (e.g., pointer arithmetic, dereferencing) that can lead to invalid memory access.
+- System calls or privileged instructions that can modify memory protection settings or access protected memory regions.
+- Instructions that can cause a pipeline flush or exception handling, such as divide-by-zero or invalid instruction exceptions.
+
+Net: except_dtlb_miss_i
+
+High-Level Event: Pipeline stall due to data translation lookaside buffer (TLB) miss.
+
+Logical Summary & Reasoning: The except_dtlb_miss_i signal is triggered when the processor encounters a data TLB miss, indicating that the requested data is not present in the cache or the TLB. This event occurs when the processor is trying to access a memory location, but the translation of the virtual address to a physical address fails. The signal is influenced by the pipeline flush signal and the reset signal, which can also trigger a stall in the pipeline. The purpose of this signal is to notify the processor of a TLB miss, allowing it to take corrective action, such as flushing the pipeline or initiating a page fault.
+
+Test-Stimulus Guidance: To provoke a data TLB miss, a software engineer can write a test program that accesses a large array or a memory-mapped peripheral, causing the processor to generate a large number of memory requests. By manipulating the memory allocation and deallocation, the test program can increase the likelihood of a TLB miss. Additionally, the test program can use instructions that access memory locations with a high likelihood of being unmapped or protected, such as accessing a memory location that is not mapped to a valid physical address.
+
+Instruction Categories: The instructions that can influence the except_dtlb_miss_i signal can be grouped into the following categories: 
+- Load and store instructions: Instructions that access memory locations, such as load, store, and load-linked instructions.
+- Memory management instructions: Instructions that manipulate memory mappings, such as page table updates and memory protection instructions.
+- Cache management instructions: Instructions that manipulate the cache, such as cache flush and invalidate instructions.
+- Memory barrier instructions: Instructions that ensure memory consistency, such as memory barrier and fence instructions.
+
+Net: except_fpu
+
+High-Level Event: Floating-point instruction execution results in an exception.
+
+Logical Summary & Reasoning: The signal `except_fpu` is related to the handling of floating-point instructions in the processor. It is influenced by the presence of a floating-point unit (FPU) and the outcome of executing a floating-point instruction. If the FPU is present and a floating-point instruction results in an exception, this signal is asserted. This indicates that the processor has encountered an error or an unsupported operation during the execution of a floating-point instruction, requiring the processor to take corrective action.
+
+Test-Stimulus Guidance: To provoke this signal, a test program can include floating-point instructions that are likely to result in an exception, such as division by zero, overflow, or underflow. The program can also include instructions that test the boundaries of the FPU's capabilities, such as extremely large or small numbers. Additionally, the program can intentionally disable or enable the FPU to observe the effect on the `except_fpu` signal.
+
+Instruction Categories: The instructions that influence this signal can be grouped into the following categories: floating-point arithmetic instructions (e.g., addition, subtraction, multiplication, division), floating-point comparison instructions (e.g., equality, inequality, greater than, less than), and floating-point load/store instructions. These instructions can be further divided into subcategories based on the type of floating-point operation (e.g., single-precision, double-precision) and the specific operation being performed (e.g., addition, multiplication).
+
+Net: except_ibus_align_i
+
+High-Level Event: Instruction fetch alignment exception occurs due to misaligned instruction access.
+
+Logical Summary & Reasoning: The `except_ibus_align_i` signal is triggered when an instruction fetch operation encounters a misaligned memory access. This can happen when the program counter is not properly aligned to the instruction boundary, causing the instruction fetch unit to access memory locations that do not contain valid instructions. The signal is influenced by the decode stage of the pipeline, where the instruction opcode is analyzed to determine if it is a branch instruction. If the instruction is a branch instruction, the signal is triggered if the branch target address is not properly aligned.
+
+Test-Stimulus Guidance: To trigger this event, a software engineer can write a test program that intentionally misaligns the program counter to a non-instruction boundary. This can be achieved by using a branch instruction with a misaligned target address or by using a load instruction with a misaligned memory address. Additionally, the test program can use a combination of instructions that cause the instruction fetch unit to access memory locations that do not contain valid instructions.
+
+Instruction Categories: The instructions that can influence this signal include:
+* Branch instructions (e.g., jump, call, return)
+* Load instructions (e.g., load word, load byte)
+* Instructions that cause the program counter to be misaligned (e.g., jump to a misaligned address)
+* Instructions that access memory locations that do not contain valid instructions (e.g., load from a misaligned address)
+
+Net: except_ibus_err_i
+
+High-Level Event: Instruction fetch error due to invalid memory access.
+
+Logical Summary & Reasoning: The signal except_ibus_err_i is related to an error that occurs during the instruction fetch stage. This error is triggered when the processor attempts to access an invalid memory location, resulting in an instruction bus error. The error can be caused by various factors such as an invalid memory address, a memory access violation, or a fault in the instruction fetch process. The signal is propagated through the pipeline stages, starting from the fetch stage, and is used to trigger an exception handling mechanism.
+
+Test-Stimulus Guidance: To provoke this event, a software test program can be written to intentionally access an invalid memory location, such as a non-existent memory address, a protected memory region, or an address that is not properly aligned. This can be achieved through a variety of instructions, including load and store operations, jumps to invalid addresses, or the execution of instructions that access memory locations that are not valid.
+
+Instruction Categories: The instructions that can influence this signal include:
+* Load and store instructions that access memory locations
+* Jump and branch instructions that target invalid memory addresses
+* Instructions that access memory-mapped I/O devices or protected memory regions
+* Instructions that execute in a context where memory access is restricted, such as in a privileged mode or with a specific memory protection setting.
+
+Net: except_illegal_i
+
+High-Level Event: The processor encounters an illegal instruction, resulting in an exception being raised.
+
+Logical Summary & Reasoning: The except_illegal_i signal is triggered when the processor's decode stage encounters an instruction that is not recognized or is invalid. This can occur due to various reasons such as an unknown opcode, invalid instruction format, or an instruction that is not supported by the processor. The signal is generated by the decode stage and is propagated to the control unit, which then raises an exception. The exception handling mechanism is then triggered, which may involve saving the current state, jumping to an exception handler, and performing other necessary actions.
+
+Test-Stimulus Guidance: To provoke this event, a software engineer can write a test program that includes an illegal instruction. This can be done by inserting an invalid opcode or instruction format into the code. For example, the engineer can use a hexadecimal editor to modify the binary code of a program and insert an invalid instruction. Alternatively, the engineer can use a compiler or assembler to generate code that includes an invalid instruction. The test program can then be run on the processor, and the except_illegal_i signal can be monitored to verify that it is triggered when the illegal instruction is encountered.
+
+Instruction Categories: The instructions that can influence the except_illegal_i signal are those that are not recognized or are invalid. These can include:
+* Unknown opcodes
+* Invalid instruction formats
+* Instructions that are not supported by the processor
+* Instructions that are not properly encoded
+* Instructions that have invalid operands or operand combinations.
+
+Net: except_ipagefault_i
+
+High-Level Event: Page fault exception occurred during instruction execution.
+
+Logical Summary & Reasoning: The except_ipagefault_i signal is triggered when a page fault exception occurs during instruction execution. This happens when the processor attempts to access a memory location that is not mapped to a valid page. The signal is influenced by various factors, including the page table entries, memory management unit (MMU) settings, and instruction operands. The signal is propagated through the pipeline stages, starting from the fetch stage, and is eventually handled by the exception handling mechanism.
+
+Test-Stimulus Guidance: To provoke a page fault exception, software can attempt to access a memory location that is not mapped to a valid page. This can be done by executing an instruction that loads or stores data from an unmapped address, or by jumping to an unmapped address. Additionally, software can modify the page table entries or MMU settings to trigger a page fault exception. For example, in C code, a page fault exception can be provoked by dereferencing a pointer to an unmapped address, such as `*(volatile int *)0x10000000 = 0x1;`.
+
+Instruction Categories: The instructions that can influence the except_ipagefault_i signal can be grouped into the following categories:
+* Load and store instructions (e.g., `lw`, `sw`, `ld`, `st`) that access memory locations.
+* Jump and branch instructions (e.g., `j`, `jal`, `beq`, `bne`) that change the program counter.
+* Instructions that modify the page table entries or MMU settings (e.g., `mtc0`, `mfc0`).
+* Instructions that access I/O devices or other memory-mapped resources.
+
+Net: except_itlb_miss_i
+
+High-Level Event: Instruction fetch encounters an ITLB (Instruction Translation Lookaside Buffer) miss.
+
+Logical Summary & Reasoning: The signal except_itlb_miss_i is triggered when the processor encounters an ITLB miss during instruction fetch. This occurs when the instruction address is not found in the ITLB, requiring a page table walk or other exception handling mechanism to resolve the address translation. The signal is influenced by various conditions, including pipeline flush, page faults, and branch exceptions, which can affect the instruction fetch process. The processor's control logic gates this signal based on these conditions, ultimately determining whether an ITLB miss exception should be raised.
+
+Test-Stimulus Guidance: To provoke an ITLB miss exception, a test program can be designed to execute instructions that access memory locations not recently accessed, thereby increasing the likelihood of an ITLB miss. This can be achieved by using a large code footprint, jumping to different code locations, or using self-modifying code. Additionally, the test program can intentionally cause page faults or branch exceptions to exercise the processor's exception handling mechanisms.
+
+Instruction Categories: The instructions that influence the except_itlb_miss_i signal can be grouped into categories such as:
+* Instruction fetch instructions (e.g., jump, branch, return)
+* Memory access instructions (e.g., load, store)
+* Exception-generating instructions (e.g., divide by zero, invalid opcode)
+* Control flow instructions (e.g., conditional branch, loop instructions)
+These instruction categories can be used to craft test programs that exercise the ITLB miss exception handling mechanism and verify the correct behavior of the processor.
+
+Net: except_pic
+
+High-Level Event: Exception handling due to a pending interrupt or trap.
+
+Logical Summary & Reasoning: The `except_pic` signal is related to exception handling in the processor. It is influenced by the presence of a pending interrupt or trap, as well as the current state of the processor's status register (`spr_sr`). The signal is also dependent on the `mor1kx_cpu_cappuccino_FEATURE_PIC` feature, which suggests that it is related to the handling of interrupts. The signal's value is determined by a combination of factors, including the presence of a pending interrupt, the state of the status register, and the current instruction being executed.
+
+Test-Stimulus Guidance: To provoke this signal, a test program could be written to trigger an interrupt or trap, and then execute instructions that interact with the status register. For example, a test program could use a load instruction to set a specific bit in the status register, and then use a store instruction to trigger an interrupt. The program could also use a combination of instructions to create a pending interrupt or trap, and then execute instructions that interact with the exception handling mechanism.
+
+Instruction Categories: The instructions that influence this signal can be grouped into the following categories:
+* Load and store instructions that interact with the status register
+* Instructions that trigger interrupts or traps (e.g. divide by zero, page fault)
+* Instructions that interact with the exception handling mechanism (e.g. return from exception, save context)
+* Instructions that modify the processor's state (e.g. change mode, set/clear flags)
+
+Net: except_range
+
+High-Level Event: An exception is triggered due to an out-of-range value, causing the processor to enter an exception handling state.
+
+Logical Summary & Reasoning: The `except_range` signal is asserted when an out-of-range value is detected, which can occur during arithmetic operations, such as addition or multiplication, when the result exceeds the maximum representable value. This signal is also influenced by the presence of certain features, such as overflow detection, and is used to trigger an exception handling mechanism. The signal is dependent on the values of various status registers and flags, which are updated based on the execution of instructions. The processor's behavior in response to this signal is to enter an exception handling state, which involves saving the current state and jumping to a predefined exception handling routine.
+
+Test-Stimulus Guidance: To trigger this event, a test program can be written to perform arithmetic operations that result in out-of-range values, such as adding two large numbers that exceed the maximum representable value. Additionally, the test program can be designed to test the interaction between the `except_range` signal and other status registers and flags, such as the overflow flag. The test program can also be used to verify that the processor correctly enters an exception handling state in response to the `except_range` signal.
+
+Instruction Categories: The instructions that can influence the `except_range` signal can be grouped into the following categories:
+* Arithmetic instructions, such as add, subtract, multiply, and divide
+* Load and store instructions that can result in out-of-range values
+* Instructions that update status registers and flags, such as the overflow flag
+* Instructions that trigger exception handling mechanisms, such as trap instructions
+These instruction categories can be used to create test programs that exercise the `except_range` signal and verify its correct behavior.
+
+Net: except_syscall_i
+
+High-Level Event: A system call exception is triggered, causing the pipeline to be flushed and the processor to enter an exception handling mode.
+
+Logical Summary & Reasoning: This signal is raised when a system call instruction is encountered, which is identified by a specific opcode and opcode subset. The signal is propagated through the decode and execute stages, and its assertion causes the pipeline to be flushed and the processor to enter an exception handling mode. The system call exception is a high-level architectural event that allows the operating system to handle the system call and perform the necessary actions.
+
+Test-Stimulus Guidance: To provoke this event, a software engineer can write a C program that includes a system call instruction, such as a call to a system call function or a direct invocation of a system call using inline assembly. The program should be designed to trigger the system call exception, allowing the engineer to test the processor's exception handling mechanism. For example, the program could include a loop that repeatedly invokes a system call, or it could include a conditional statement that triggers the system call exception only under certain conditions.
+
+Instruction Categories: The instructions that influence this signal can be grouped into the following categories: 
+* System call instructions: These instructions trigger the system call exception and cause the pipeline to be flushed.
+* Opcode-specific instructions: These instructions have a specific opcode that is recognized by the decode stage as a system call instruction.
+* Exception-generating instructions: These instructions can generate exceptions, including system call exceptions, and can be used to test the processor's exception handling mechanism.
+
+Net: except_ticktimer
+
+High-Level Event: Exception occurs due to timer tick.
+
+Logical Summary & Reasoning: The except_ticktimer signal is generated when a timer tick exception occurs. This happens when the timer tick signal (spr_ttmr) is set and the supervisor register (spr_sr) has its bit 1 set, indicating that timer interrupts are enabled. The signal is also dependent on the state of the processor, including whether an exception is already being handled (doing_rfe) and whether a return-from-exception instruction (ctrl_op_rfe_i) is being executed. The generation of this signal is a result of the interaction between the timer module, the exception handling mechanism, and the processor's control logic.
+
+Test-Stimulus Guidance: To trigger this event, a test program can be written to enable timer interrupts, set the timer tick signal, and then execute an instruction that would normally cause an exception. The program can then verify that the except_ticktimer signal is asserted. The test program can use assembly language instructions to set the timer tick signal and enable timer interrupts. For example, the program can use a timer-related instruction to set the timer tick signal, and then use a supervisor-mode instruction to enable timer interrupts.
+
+Instruction Categories: The instructions that can influence the except_ticktimer signal include:
+- Timer-related instructions (e.g., setting the timer tick signal)
+- Supervisor-mode instructions (e.g., enabling timer interrupts)
+- Exception-handling instructions (e.g., return-from-exception)
+- Instructions that can cause exceptions (e.g., invalid opcode, division by zero)
+
+Net: except_trap_i
+
+High-Level Event: The processor encounters an exception or trap condition during instruction execution.
+
+Logical Summary & Reasoning: The `except_trap_i` signal is triggered when the processor detects an exception or trap condition, such as an invalid instruction or an undefined operation. This signal is influenced by various factors, including the type of instruction being executed, the state of the pipeline, and the configuration of the processor. The signal is generated when the decode stage of the pipeline encounters an instruction that meets certain conditions, such as an opcode that corresponds to an undefined operation. The signal is then propagated through the pipeline, ultimately causing the processor to enter an exception handling mode.
+
+Test-Stimulus Guidance: To provoke this event, a software engineer can write a test program that includes instructions that are likely to trigger an exception or trap condition. For example, the program can include invalid or undefined instructions, or instructions that attempt to access memory locations that are not valid. The program can also include instructions that deliberately cause the processor to encounter an exception, such as a division by zero or an attempt to access a privileged resource.
+
+Instruction Categories: The instructions that influence this signal can be grouped into categories such as:
+* Invalid or undefined instructions
+* Instructions that access memory locations that are not valid
+* Instructions that attempt to perform privileged operations
+* Instructions that cause arithmetic exceptions, such as division by zero or overflow
+* Instructions that cause pipeline flushes or stalls, such as those that depend on the result of a previous instruction that has not yet completed.
+
+Net: exception
+
+High-Level Event: An exception occurs due to an invalid or unhandled instruction, alignment issue, or other processor-related errors.
+
+Logical Summary & Reasoning: The exception signal is generated when an invalid or unhandled instruction is encountered, or when there is an alignment issue with the instruction or data. This can occur due to various reasons such as an invalid opcode, undefined instruction, or an attempt to access an unaligned memory location. The processor's decode stage plays a crucial role in detecting these exceptions, and the signal is propagated to the control unit to handle the exception accordingly. The exception can be triggered by a variety of instructions, including those that attempt to access invalid memory locations, execute undefined instructions, or cause alignment issues.
+
+Test-Stimulus Guidance: To provoke this exception, a test program can be written to execute a sequence of instructions that are likely to trigger the exception. For example, the program can include instructions that attempt to access unaligned memory locations, execute undefined opcodes, or cause other processor-related errors. The test program can also include instructions that test the processor's handling of exceptions, such as instructions that intentionally cause an exception and then attempt to recover from it. Some examples of instructions that can be used to provoke this exception include: 
+- Loading or storing data to an unaligned memory location
+- Executing an undefined or invalid instruction
+- Attempting to access a memory location that is not mapped or is protected
+- Causing an arithmetic overflow or underflow
+- Executing an instruction that is not supported by the processor
+
+Instruction Categories: The instructions that can influence this signal can be grouped into the following categories:
+- Load and store instructions that access unaligned memory locations
+- Instructions that execute undefined or invalid opcodes
+- Instructions that attempt to access memory locations that are not mapped or are protected
+- Arithmetic instructions that can cause overflow or underflow
+- Instructions that are not supported by the processor
+- Instructions that intentionally cause an exception, such as a software interrupt or a trap instruction.
+
+Net: exception_pc_addr
+
+High-Level Event: The processor encounters an exception and the program counter is saved to a special register.
+
+Logical Summary & Reasoning: The `exception_pc_addr` signal is generated when the processor encounters an exception, which can occur due to various reasons such as division by zero, invalid instruction, or memory access violation. When an exception occurs, the processor saves the current program counter (PC) to a special register, allowing the exception handler to access the location where the exception occurred. This signal is related to the exception handling mechanism of the processor, which involves saving the current state of the processor, including the PC, and transferring control to the exception handler. The `exception_pc_addr` signal is a critical component of this mechanism, as it provides the address where the exception occurred, allowing the exception handler to take corrective action.
+
+Test-Stimulus Guidance: To provoke this signal, a test program can be written to intentionally cause an exception, such as dividing by zero or accessing an invalid memory location. The test program can then verify that the `exception_pc_addr` signal is generated and that the program counter is correctly saved to the special register. For example, a test program can include the following C code to provoke a division by zero exception: `int x = 1 / 0;`. This will cause the processor to generate an exception and save the program counter to the special register.
+
+Instruction Categories: The instructions that can influence the `exception_pc_addr` signal include:
+* Arithmetic instructions that can cause exceptions, such as division by zero or overflow
+* Memory access instructions that can cause exceptions, such as invalid memory addresses or page faults
+* Control flow instructions that can cause exceptions, such as invalid branch targets or return from interrupt instructions
+* Instructions that can cause the processor to enter an exception state, such as the `trap` instruction or the `syscall` instruction.
+
+Net: exception_pending
+
+High-Level Event: An exception is pending and will be handled by the processor.
+
+Logical Summary & Reasoning: The exception_pending signal is a result of various exception conditions being detected by the processor, including instruction bus errors, alignment errors, illegal instructions, and others. The signal is generated by a combination of these conditions, which are checked at different stages of the pipeline. When any of these conditions are met, the exception_pending signal is set, indicating that an exception needs to be handled. The processor will then handle the exception by invoking an exception handler routine.
+
+Test-Stimulus Guidance: To provoke an exception_pending event, a test program can be written to execute instructions that will trigger one of the exception conditions. For example, executing an instruction with an invalid opcode or attempting to access an invalid memory address can trigger an exception. Additionally, a test program can be written to intentionally cause an alignment error or execute an instruction that is not supported by the processor.
+
+Instruction Categories: The following categories of instructions can influence the exception_pending signal:
+* Load and store instructions that access invalid memory addresses
+* Instructions with invalid opcodes or operands
+* Instructions that cause alignment errors
+* Instructions that are not supported by the processor
+* Instructions that attempt to access privileged resources without proper authorization
+* Instructions that trigger interrupts or exceptions, such as system calls or trap instructions.
+

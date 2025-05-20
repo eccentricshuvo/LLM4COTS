@@ -1,0 +1,15 @@
+Net: exception_r
+
+High-Level Event: Indicates whether an exception has been acknowledged or cleared in the processor.
+
+Logical Summary & Reasoning:  
+This signal is driven low during reset or when an exception is being taken or re-issued after a stall. It remains high unless an exception occurs that has not been acknowledged, reflecting the processor's exception handling state. This behavior is controlled by reset, exception take signals, and restart conditions, representing the processor's exception acknowledgment status at the architectural level.
+
+Test-Stimulus Guidance:  
+Trigger an exception by executing an instruction that causes an architectural exception (e.g., illegal instruction, page fault). Ensure the processor's exception handling logic is activated without reset. Additionally, simulate scenarios where exceptions are re-initiated after stalls to observe the transition of this signal.
+
+Instruction Categories:  
+- Exception-causing instructions (illegal operations, access violations)  
+- Instructions that trigger exception re-issuance after pipeline stalls  
+- Normal instructions during exception handling or reset conditions
+

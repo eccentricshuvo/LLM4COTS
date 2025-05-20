@@ -1,0 +1,13 @@
+Net: exception_r
+
+High-Level Event: Detection of a new exception condition triggering exception handling.
+
+Logical Summary & Reasoning:  
+This signal indicates the occurrence of a newly detected exception that has not yet been acknowledged or handled. It is reset during processor reset or when an exception is already being taken or the pipeline is being restarted from a stall. Thus, it reflects the transition from normal execution to an exception state by flagging that a new exception condition has arisen and needs to be serviced.
+
+Test-Stimulus Guidance:  
+To provoke this event, software should include operations that cause exceptions such as illegal instructions, privileged instruction attempts, memory access violations (e.g., misaligned or invalid address accesses), or arithmetic faults (e.g., divide by zero). Triggering an exception that is not immediately cleared will set this signal.
+
+Instruction Categories:  
+Instructions that can trigger exceptions, including illegal or privileged instructions, memory access instructions that may cause faults, and arithmetic instructions that can generate errors (e.g., divide instructions). Also includes control flow instructions that may cause exceptions indirectly (e.g., traps or system calls).
+

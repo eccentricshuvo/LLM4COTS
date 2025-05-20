@@ -1,0 +1,13 @@
+Net: ctrl_flag_clear
+
+High-Level Event: Setting or clearing control flags based on arithmetic operations in the ALU.
+
+Logical Summary & Reasoning: The signal `ctrl_flag_clear` is responsible for controlling the setting or clearing of flags based on arithmetic operations in the ALU. It is influenced by various conditions such as comparison results, carry operations, and immediate values. The signal is propagated through multiple modules to determine the final flag status.
+
+Test-Stimulus Guidance: To provoke the `ctrl_flag_clear` event, software can perform arithmetic operations that involve comparisons, carry operations, and immediate values. For example, executing instructions that involve comparisons like equal, less than, or greater than, and operations that affect the carry flag.
+
+Instruction Categories: 
+1. Arithmetic Instructions: Instructions that perform arithmetic operations such as addition, subtraction, and comparison.
+2. Control Transfer Instructions: Instructions that involve branching or setting flags based on comparison results.
+3. Immediate Value Instructions: Instructions that involve immediate values in arithmetic operations.
+

@@ -1,0 +1,34 @@
+Net: op_alu_i
+
+High-Level Event: An instruction requires the ALU to perform an arithmetic or logic operation.
+
+Logical Summary & Reasoning:  
+The signal op_alu_i reflects whether the current instruction decoded by the processor demands ALU involvement. Its asserted value depends on the instruction opcode matching specific operation codes associated with arithmetic or logic functions. It is gated by reset, pipeline flush, and decode bubble conditions, ensuring that only valid, non-flushed, non-bubbled instructions trigger ALU operations. Thus, logically, op_alu_i indicates an active ALU operation request driven by instruction decoding that identifies arithmetic or logical instructions.
+
+Test-Stimulus Guidance:  
+To provoke this event from software, write C code containing arithmetic or logic operations such as additions, subtractions, bitwise AND, OR, XOR, or comparisons that translate into instructions requiring ALU computation. For example, expressions involving integer addition, subtraction, bitwise operations, or shifts will generate instructions that assert this signal.
+
+Instruction Categories:  
+Arithmetic instructions (add, sub, add immediate), logic instructions (AND, OR, XOR), and comparison instructions that require ALU processing. These include immediate and register-register variants within these categories.
+
+Net: op_cmov
+
+High-Level Event: Execution of a conditional move instruction based on a runtime condition.
+
+Logical Summary & Reasoning:  
+The signal op_cmov is asserted when the processor decodes and executes an ALU operation matching the opcode for a conditional move instruction. This indicates that the current instruction is intended to conditionally transfer a value from one register to another depending on a condition evaluated at execution time. The signal gates the ALU operation enable with a specific opcode comparison, reflecting the activation of a move-if condition instruction in the execute stage, which influences the architectural state by selectively updating a destination register.
+
+Test-Stimulus Guidance:  
+To provoke this event, software should include instructions that perform conditional data transfers—commonly known as conditional moves or select instructions. In C, these can be synthesized by using conditional assignments or ternary expressions that compile down to conditional moves, such as:  
+```c
+int a = condition ? b : a;  
+```  
+or by using inline assembly or compiler intrinsics that map directly to conditional move instructions. The key is to have instructions that move data only if a certain condition (e.g., zero flag, carry flag) holds true at execution time.
+
+Instruction Categories:  
+This event is influenced by instructions that perform conditional data movement, including:  
+- Conditional Move (CMOV) instructions  
+- Select or conditional select instructions  
+- Branchless conditional assignment instructions  
+These instructions typically fall under the category of conditional data transfer or conditional execution instructions that manipulate register contents based on runtime flags or conditions.
+

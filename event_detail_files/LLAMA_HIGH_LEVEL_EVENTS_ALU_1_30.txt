@@ -1,0 +1,435 @@
+Net: a_eq_b
+
+High-Level Event: Comparison of two operands results in equality.
+
+Logical Summary & Reasoning: The signal a_eq_b is set when the values of two operands, a and b, are equal. This comparison is performed in the execution stage of the pipeline, where the operands are sourced from either the register file or an immediate value. The equality check is a fundamental operation that can influence the control flow of a program, particularly in conditional branch instructions. The signal's purpose is to indicate whether the compared values are equal, which can then be used to determine the next instruction to be executed.
+
+Test-Stimulus Guidance: To provoke the a_eq_b signal, a test program can include instructions that compare two operands, such as arithmetic or logical operations with equal operands. For example, a simple test case could be a sequence of instructions that load two registers with the same value and then perform a comparison operation between them. Additionally, using immediate values or register values that are known to be equal can also trigger the a_eq_b signal.
+
+Instruction Categories: The types of instructions that influence the a_eq_b signal can be grouped into the following categories: 
+- Comparison instructions (e.g., equality checks, greater-than, less-than)
+- Arithmetic instructions with equal operands (e.g., addition, subtraction)
+- Logical instructions with equal operands (e.g., AND, OR)
+- Load and store instructions that set up equal operand values
+- Branch instructions that rely on the result of a comparison operation.
+
+Net: a_lts_b
+
+High-Level Event: The processor performs a less-than comparison between two signed integers.
+
+Logical Summary & Reasoning: The signal a_lts_b is generated based on the result of a comparison between the signs of two operands. This comparison is done in the execution stage of the pipeline, where the processor checks if the result of an operation would cause a signed overflow. The signal is set to true if the first operand is less than the second operand, indicating that the result of the comparison is true. This is achieved by checking the sign bits of the operands and the result of the operation. The processor uses the result of this comparison to determine the outcome of a less-than instruction.
+
+Test-Stimulus Guidance: To provoke this event, software can use a less-than instruction with two signed integers as operands. For example, in C code, this could be achieved using a statement like "if (a < b)", where a and b are signed integers. The processor will perform the comparison and set the result accordingly. Additionally, using instructions that involve signed arithmetic, such as subtracting one signed integer from another, can also trigger this event.
+
+Instruction Categories: The types of instructions that influence this signal include:
+* Comparison instructions (e.g., less-than, greater-than)
+* Signed arithmetic instructions (e.g., add, subtract)
+* Instructions that involve signed overflow detection (e.g., add-with-carry, subtract-with-borrow)
+* Branch instructions that depend on the result of a comparison (e.g., branch-if-less-than)
+
+Net: a_ltu_b
+
+High-Level Event: The signal indicates a less-than comparison between two operands in an arithmetic operation.
+
+Logical Summary & Reasoning: The signal a_ltu_b is derived from the carryout of an adder operation, which is influenced by the operands and the carry-in signal. The carryout is negated to produce the a_ltu_b signal, indicating a less-than comparison. The operands are selected based on the instruction type, such as branch destination, immediate values, or register values. The signal is used to determine the result of a comparison operation, which can be used to set flags or control the flow of the program.
+
+Test-Stimulus Guidance: To trigger the a_ltu_b signal, a test program can execute a comparison instruction, such as a less-than or greater-than operation, between two registers or between a register and an immediate value. The test program can also use branch instructions to test the signal's behavior in different scenarios. For example, a test program can execute a sequence of instructions that sets up a comparison operation, followed by a branch instruction that depends on the result of the comparison.
+
+Instruction Categories: The signal a_ltu_b is influenced by the following categories of instructions: 
+1. Arithmetic instructions: such as add, subtract, and compare operations.
+2. Branch instructions: such as beq, bne, blt, and bgt.
+3. Load and store instructions: which can load operands into registers for comparison operations.
+4. Immediate instructions: which can provide immediate values for comparison operations.
+
+Net: adder_carryout
+
+High-Level Event: Arithmetic operation generates a carry-out.
+
+Logical Summary & Reasoning: The adder_carryout signal is generated when the result of an arithmetic operation exceeds the maximum value that can be represented by the operand width. This occurs when the sum of two operands and a carry-in signal is greater than the maximum value. The signal is influenced by the operands, the carry-in signal, and the operation being performed. The carry-out signal is used to indicate that the result of the operation has overflowed, which can affect the flags and the result of subsequent operations.
+
+Test-Stimulus Guidance: To provoke the adder_carryout signal, a test program can perform arithmetic operations that are likely to generate a carry-out, such as adding two large numbers or performing a subtraction that results in a borrow. For example, a test program can use the following C code to provoke the adder_carryout signal: `unsigned int a = 0xFFFFFFFF; unsigned int b = 1; unsigned int result = a + b;`. This code adds two large numbers, which is likely to generate a carry-out.
+
+Instruction Categories: The adder_carryout signal can be influenced by the following categories of instructions: 
+- Arithmetic instructions: Instructions such as ADD, SUB, and NEG can generate a carry-out.
+- Logical instructions: Instructions such as AND, OR, and XOR do not typically generate a carry-out, but can influence the operands and flags that affect the adder_carryout signal.
+- Load and store instructions: Instructions that load or store data can affect the operands used in arithmetic operations, which can influence the adder_carryout signal.
+- Branch instructions: Instructions that affect the program counter or flags can influence the execution of arithmetic instructions, which can affect the adder_carryout signal.
+
+Net: adder_do_carry_i
+
+High-Level Event: Carry generation during arithmetic operations.
+
+Logical Summary & Reasoning: The adder_do_carry_i signal is related to the generation of a carry during arithmetic operations. This signal is influenced by the type of instruction being executed, specifically those that involve addition or subtraction. The signal is also dependent on the presence of certain features, such as the ADDC feature, which enables the generation of a carry. The signal's value is determined by the combination of these factors, including the instruction opcode, the ALU operation, and the presence of certain features. From a micro-architectural perspective, this signal is related to the execution stage of the pipeline, where arithmetic operations are performed. At a higher level, this signal can be seen as part of the arithmetic logic unit (ALU) that performs operations such as addition and subtraction.
+
+Test-Stimulus Guidance: To provoke the carry generation event, software engineers can write test programs that perform arithmetic operations, such as addition and subtraction, using operands that will result in a carry. For example, adding two large numbers that will result in a carry, or subtracting a small number from a larger number that will result in a borrow. The test program can also be designed to test the effect of the ADDC feature on the carry generation.
+
+Instruction Categories: The instructions that influence the adder_do_carry_i signal can be grouped into the following categories: 
+- Arithmetic instructions: Such as ADD, SUB, and other instructions that perform arithmetic operations.
+- ALU operations: Such as bitwise operations, shifts, and other operations that are performed by the ALU.
+- Flag-setting instructions: Such as instructions that set or clear flags based on the result of an operation.
+- Instructions that use the ADDC feature: Such as instructions that enable the generation of a carry during arithmetic operations.
+
+Net: adder_do_sub_i
+
+High-Level Event: The processor performs a subtraction operation.
+
+Logical Summary & Reasoning: The signal adder_do_sub_i is related to the execution of a subtraction operation in the processor. It is influenced by the decode stage of the pipeline, where the opcode and operation are analyzed to determine if a subtraction operation is required. The signal is also affected by the presence of a decode bubble, pipeline flush, or reset, which can override the execution of the subtraction operation. The overall purpose of this signal is to control the execution of subtraction operations in the processor, which is a fundamental aspect of arithmetic operations.
+
+Test-Stimulus Guidance: To provoke the subtraction operation, software can use arithmetic instructions that involve subtraction, such as subtracting two registers or a register and an immediate value. For example, in C code, the operation "a = b - c;" would trigger the subtraction operation. Additionally, using conditional statements that set flags based on the result of a subtraction operation can also influence this signal.
+
+Instruction Categories: The instructions that influence this signal can be grouped into categories such as:
+* Arithmetic instructions: subtraction, addition, multiplication, division
+* Flag-setting instructions: instructions that set flags based on the result of an operation, such as comparison instructions
+* Load and store instructions: instructions that load or store data from/to memory, which can influence the execution of arithmetic operations
+* Control flow instructions: instructions that control the flow of execution, such as jumps, branches, and conditional statements.
+
+Net: adder_result
+
+High-Level Event: Arithmetic operation completion with potential carry or overflow.
+
+Logical Summary & Reasoning: The adder_result signal is generated by the execution of an arithmetic operation, specifically addition or subtraction, with the possibility of a carry-in from a previous operation. The inputs to this operation are two operands, which can be either registers or immediate values, and the result is influenced by the carry-in signal. The operation is controlled by the adder_do_sub_i signal, which determines whether an addition or subtraction is performed. The result of this operation can potentially trigger an overflow or carry, which can affect the architectural state of the processor.
+
+Test-Stimulus Guidance: To provoke the adder_result signal, a software engineer can write a C test program that performs arithmetic operations with large values, such as adding or subtracting two large integers, to trigger a potential carry or overflow. Additionally, using immediate values or register values with specific bit patterns can help to control the inputs to the arithmetic operation and increase the likelihood of triggering the adder_result signal.
+
+Instruction Categories: The adder_result signal can be influenced by instructions that perform arithmetic operations, such as:
+* Addition instructions (e.g., ADD, ADDI)
+* Subtraction instructions (e.g., SUB, SUBI)
+* Instructions that set flags based on arithmetic operations (e.g., CMP, CMPI)
+* Instructions that perform bit-wise operations (e.g., AND, OR, XOR)
+These instruction categories can be used to craft test programs that target the adder_result signal and exercise the arithmetic operation logic in the processor.
+
+Net: adder_result_o
+
+High-Level Event: Arithmetic operation completion with potential carry or overflow.
+
+Logical Summary & Reasoning: The adder_result_o signal is generated by the execution of an arithmetic operation, potentially involving addition or subtraction, with inputs from either registers or immediate values. The operation may also involve carry-in and carry-out signals, indicating the possibility of overflow. The signal's value is determined by the combination of operands, operation type, and carry flags, which are controlled by the instruction being executed. The result of this operation can influence the architectural state, such as setting flags or updating registers.
+
+Test-Stimulus Guidance: To provoke this event, software can execute arithmetic instructions, such as addition, subtraction, or comparison operations, using a variety of input values and operand combinations. This can include testing edge cases, such as overflow or underflow, to observe the effects on the carry flags and result values. Additionally, using immediate values or registers with specific bit patterns can help isolate the effects of different input conditions.
+
+Instruction Categories: The instructions that influence this signal can be grouped into the following categories:
+- Arithmetic instructions: addition, subtraction, and comparison operations
+- Load and store instructions: when using immediate values or addressing modes that involve arithmetic calculations
+- Branch instructions: when using conditional branch instructions that rely on arithmetic results or flags
+- Flag-setting instructions: instructions that explicitly set or clear flags based on arithmetic results or conditions.
+
+Net: adder_result_sign
+
+High-Level Event: The sign bit of the result from an arithmetic operation is determined.
+
+Logical Summary & Reasoning: The adder_result_sign signal is influenced by the result of an arithmetic operation, which is determined by the values of the operands and the type of operation being performed. The signal is set based on the most significant bit of the result, which indicates the sign of the result. The operation is performed in the execute stage of the pipeline, where the operands are either registers or immediate values. The result of the operation is then used to update the architectural state, such as the registers or condition codes.
+
+Test-Stimulus Guidance: To provoke this event, a software engineer can write a C program that performs arithmetic operations with varying operand values and types, such as additions, subtractions, and comparisons. The program can also include conditional statements that depend on the result of the arithmetic operations, to test the effect of the sign bit on the program's behavior. For example, a test program could perform a series of additions and subtractions with different operand values, and then use the result to control a conditional statement.
+
+Instruction Categories: The instructions that influence this signal can be grouped into the following categories: 
+- Arithmetic instructions: additions, subtractions, multiplications, and divisions.
+- Comparison instructions: equal, not equal, greater than, less than, etc.
+- Load and store instructions: which can affect the operands used in arithmetic operations.
+- Branch instructions: which can be conditional on the result of arithmetic operations.
+These instruction categories can be used to create test programs that exercise the adder_result_sign signal and verify its behavior.
+
+Net: adder_signed_overflow
+
+High-Level Event: Arithmetic operation results in a signed overflow.
+
+Logical Summary & Reasoning: The adder_signed_overflow signal is triggered when the result of a signed arithmetic operation exceeds the maximum value that can be represented by the operand width. This occurs when the most significant bits of the two operands are the same and the most significant bit of the result is different from the most significant bits of the operands. The signal is influenced by the operands, the operation being performed (addition or subtraction), and the carry-in value. The micro-architectural role of this signal is to detect and handle overflow conditions in arithmetic operations.
+
+Test-Stimulus Guidance: To provoke this event, software engineers can write C test programs that perform arithmetic operations involving large signed numbers, such as adding two large positive numbers or subtracting a large negative number from a small positive number. For example, the test program could contain code like `int x = INT_MAX; int y = x + 1;` to trigger a signed overflow.
+
+Instruction Categories: The instructions that influence this signal can be grouped into categories such as:
+* Arithmetic instructions (e.g., add, subtract, multiply)
+* Load and store instructions that involve signed data
+* Branch instructions that depend on the result of arithmetic operations
+* Instructions that set flags based on arithmetic operations (e.g., setting the overflow flag)
+
+Net: adder_unsigned_overflow
+
+High-Level Event: Unsigned integer addition overflow occurs.
+
+Logical Summary & Reasoning: The adder_unsigned_overflow signal is triggered when the result of an unsigned integer addition operation exceeds the maximum value that can be represented by the operand width. This occurs when the carry-out of the addition operation is set, indicating that the result has overflowed. The addition operation is performed between two operands, which can be either registers or immediate values, and the result is determined by the ALU (Arithmetic Logic Unit) operation being performed. The signal is influenced by the type of operation being performed, the values of the operands, and the carry-in value.
+
+Test-Stimulus Guidance: To provoke an unsigned integer addition overflow, a test program can perform an addition operation between two large unsigned integer values, such that the result exceeds the maximum value that can be represented by the operand width. For example, adding two unsigned 32-bit integers with values close to the maximum value (e.g., 0xFFFFFFFF) will result in an overflow. The test program can use arithmetic operations, such as addition, and can set flags to detect the overflow condition.
+
+Instruction Categories: The instructions that influence the adder_unsigned_overflow signal can be grouped into the following categories: 
+- Arithmetic instructions: addition, subtraction
+- Load and store instructions: loading large unsigned integer values into registers
+- Immediate value instructions: using immediate values in arithmetic operations
+- Flag-setting instructions: setting flags to detect overflow conditions.
+
+Net: alu_result_o
+
+High-Level Event: The Arithmetic Logic Unit (ALU) result is generated after executing an instruction, which can be a logical operation, arithmetic operation, or a move operation.
+
+Logical Summary & Reasoning: The ALU result is determined by the operation being executed, which can be a logical operation (such as AND, OR, or XOR), an arithmetic operation (such as addition or subtraction), or a move operation. The operation is selected based on the opcode and the operands, which are either registers or immediate values. The ALU result is then generated based on the selected operation and the operands. This process can be summarized as follows: the ALU receives the operands and the opcode, decodes the opcode to determine the operation, performs the operation on the operands, and generates the result.
+
+Test-Stimulus Guidance: To test the ALU result, a software engineer can write a test program that executes various instructions, including logical operations, arithmetic operations, and move operations. The test program can use different operands, such as registers and immediate values, to test the ALU result for various scenarios. For example, the test program can execute an AND instruction with two register operands, and then verify that the ALU result is correct. Similarly, the test program can execute an addition instruction with a register operand and an immediate value, and then verify that the ALU result is correct.
+
+Instruction Categories: The instructions that influence the ALU result can be categorized into the following groups:
+* Logical instructions (e.g., AND, OR, XOR)
+* Arithmetic instructions (e.g., addition, subtraction)
+* Move instructions (e.g., move register to register, move immediate to register)
+* Load and store instructions (e.g., load register from memory, store register to memory)
+* Branch instructions (e.g., branch if equal, branch if not equal)
+These instruction categories can be used to test the ALU result for various scenarios, including different operations, operands, and instruction types.
+
+Net: alu_stall
+
+High-Level Event: Pipeline stall due to unavailable operand or functional unit.
+
+Logical Summary & Reasoning: The alu_stall signal is triggered when the processor's functional units, such as the divider, multiplier, floating-point unit, or shifter, are not ready to execute an instruction. This can occur when the previous instruction has not completed, or the required operands are not available. The signal is a result of the processor's dependency chase, where it checks the status of various functional units and operands before executing an instruction. The processor will stall until the required resources become available, ensuring that instructions are executed correctly and in the correct order.
+
+Test-Stimulus Guidance: To provoke the alu_stall signal, software engineers can write test programs that include instructions with dependencies on previous instructions, such as dividing or multiplying numbers that are being calculated by previous instructions. Additionally, using instructions that require the floating-point unit or shifter can also trigger the alu_stall signal if these units are not ready. For example, a test program could include a sequence of instructions like: `load A, #10; load B, #5; div C, A, B;` where the `div` instruction depends on the completion of the previous `load` instructions.
+
+Instruction Categories: The instructions that can influence the alu_stall signal can be grouped into the following categories: 
+- Arithmetic instructions (e.g., add, subtract, multiply, divide)
+- Floating-point instructions (e.g., floating-point add, subtract, multiply, divide)
+- Shift instructions (e.g., shift left, shift right)
+- Load and store instructions that provide operands for the above instructions. 
+These instructions can be combined in various ways to create test programs that provoke the alu_stall signal and test the processor's ability to handle dependencies and stalls.
+
+Net: alu_valid_o
+
+High-Level Event: Arithmetic operation completion without stall.
+
+Logical Summary & Reasoning: The alu_valid_o signal is asserted when there is no stall in the arithmetic logic unit (ALU). This occurs when none of the following conditions are met: a division operation is in progress and the division unit is not ready, a multiplication operation is in progress and the multiplication unit is not ready, a floating-point arithmetic operation is in progress and the floating-point unit is not ready, a comparison operation is in progress and the comparison unit is not ready, a shift operation is in progress and the shift unit is not ready, or a find-first-set or find-first-clear operation is in progress and the corresponding unit is not ready. The signal is influenced by the decode stage of the pipeline, where the operation type is determined and the corresponding unit's readiness is checked.
+
+Test-Stimulus Guidance: To provoke the alu_valid_o signal, software can execute a sequence of instructions that includes arithmetic operations, such as addition, subtraction, multiplication, and division, as well as bitwise operations like shifts and finds. The instructions should be arranged such that the dependencies between them are minimized, allowing the ALU to complete its operations without stalling. For example, a sequence of independent addition operations can be used to test the ALU's ability to complete operations without stalling.
+
+Instruction Categories: The instructions that influence the alu_valid_o signal can be grouped into the following categories: 
+- Arithmetic instructions (e.g., add, sub, mul, div)
+- Bitwise instructions (e.g., shift, find-first-set, find-first-clear)
+- Comparison instructions (e.g., cmp)
+- Floating-point instructions (e.g., add, sub, mul, div)
+These instruction categories can be used to test the ALU's behavior and provoke the alu_valid_o signal.
+
+Net: b_mux
+
+High-Level Event: Operand selection for arithmetic operation based on instruction type.
+
+Logical Summary & Reasoning: The b_mux signal is influenced by the type of operation being performed, specifically whether it's an addition or subtraction. When the operation is subtraction, the signal selects the negated operand; otherwise, it selects the operand based on whether the instruction is calculating a branch destination or using an immediate value. This suggests that the signal is part of the execute stage of the pipeline, where the operation's operands are prepared for execution. The dependency on the operation type and the source of the operand indicates that this signal is crucial for ensuring correct operand selection for various instruction types.
+
+Test-Stimulus Guidance: To provoke this signal, software can use a combination of arithmetic instructions, such as addition and subtraction, with varying operand sources, including immediate values and register values. For example, a test program could include a sequence of instructions like "ADD R1, R2, R3" followed by "SUB R4, R5, R6" to exercise the b_mux signal's selection based on operation type. Additionally, using branch instructions with immediate destinations can help test the signal's behavior when calculating branch destinations.
+
+Instruction Categories: The b_mux signal is influenced by the following categories of instructions: 
+1. Arithmetic instructions (e.g., ADD, SUB)
+2. Branch instructions with immediate destinations
+3. Instructions using immediate values as operands
+These instruction categories can be used to craft test programs that exercise the b_mux signal and ensure its correct operation.
+
+Net: b_neg
+
+High-Level Event: The processor encounters a conditional branch instruction with a negated condition.
+
+Logical Summary & Reasoning: The b_neg signal is influenced by the result of a conditional branch calculation, which is determined by the instruction's operands and the current state of the processor. The signal is asserted when the branch condition is not met, indicating that the branch should not be taken. This is a result of the processor's execution of a conditional branch instruction, where the condition is evaluated and the branch is either taken or not taken based on the result.
+
+Test-Stimulus Guidance: To provoke this event, a software engineer can write a C test program that includes a conditional branch instruction with a condition that is likely to be false, such as a comparison between two registers with different values. The program can then be executed on the processor to trigger the b_neg signal.
+
+Instruction Categories: The instructions that influence the b_neg signal can be grouped into the following categories: 
+- Conditional branch instructions (e.g. beq, bne, blt, bgt)
+- Instructions that set the condition codes used by the conditional branch instructions (e.g. arithmetic and comparison instructions)
+
+Net: carry_clear_o
+
+High-Level Event: The processor clears the carry flag after executing an arithmetic operation that does not generate a carry.
+
+Logical Summary & Reasoning: The carry_clear_o signal is asserted when the processor is configured to support the carry flag and an arithmetic operation (addition, multiplication, or division) is executed without generating an overflow or division by zero. This suggests that the signal is related to the management of the carry flag in the processor. The signal is dependent on the type of operation being executed and the presence of overflows or division by zero, indicating that it is used to control the carry flag based on the outcome of arithmetic operations.
+
+Test-Stimulus Guidance: To provoke the carry_clear_o signal, software can execute arithmetic operations such as addition, multiplication, or division that do not generate overflows or division by zero. For example, a C program can use arithmetic operators (+, *, /) with operands that do not cause overflows or division by zero. The program can also use flag-setting instructions to manipulate the carry flag before executing the arithmetic operations.
+
+Instruction Categories: The instructions that influence the carry_clear_o signal can be grouped into the following categories: 
+- Arithmetic instructions: addition, subtraction, multiplication, and division
+- Flag-setting instructions: instructions that set or clear the carry flag
+- Overflow-generating instructions: instructions that generate overflows or division by zero, such as adding two large numbers or dividing by zero.
+
+Net: carry_i
+
+High-Level Event: The processor sets or clears the carry flag based on the result of an arithmetic operation.
+
+Logical Summary & Reasoning: The carry flag is set or cleared based on the result of an arithmetic operation, such as addition, subtraction, multiplication, or division. The flag is set when the result of the operation overflows or underflows, and cleared otherwise. The processor uses the carry flag to indicate the result of the operation and to determine the correct result for subsequent operations. The carry flag is influenced by the type of operation being performed, the operands, and the result of the operation.
+
+Test-Stimulus Guidance: To test the carry flag, a software engineer can write a test program that performs a series of arithmetic operations, such as addition, subtraction, multiplication, and division, and checks the value of the carry flag after each operation. The test program can use a variety of operands, including numbers that cause overflow or underflow, to test the carry flag under different conditions. For example, the test program can perform an addition operation that overflows, and then check the value of the carry flag to ensure it is set. Similarly, the test program can perform a subtraction operation that underflows, and then check the value of the carry flag to ensure it is set.
+
+Instruction Categories: The carry flag is influenced by the following categories of instructions:
+* Arithmetic instructions: addition, subtraction, multiplication, and division
+* Bitwise instructions: bitwise AND, OR, and XOR
+* Load and store instructions: loading and storing data from memory can affect the carry flag
+* Branch instructions: conditional branch instructions can be affected by the carry flag
+* Flag-setting instructions: instructions that explicitly set or clear the carry flag, such as CLC (clear carry flag) and STC (set carry flag) instructions.
+
+Net: carry_in
+
+High-Level Event: Arithmetic operation generates a carry.
+
+Logical Summary & Reasoning: The carry_in signal is generated when an arithmetic operation, such as addition or subtraction, produces a result that exceeds the maximum value that can be represented by the operand size. This can occur when the result of an operation has a carry-out from the most significant bit. The signal is influenced by the type of operation being performed, such as addition or subtraction, and the values of the operands. The carry_in signal is used to propagate the carry to the next arithmetic operation, allowing for correct calculation of multi-word arithmetic operations.
+
+Test-Stimulus Guidance: To provoke the carry_in signal, a software engineer can write a test program that performs arithmetic operations that are likely to generate a carry. For example, adding two large numbers that exceed the maximum value that can be represented by the operand size, or subtracting a small number from a large number. The test program can use instructions such as add, subtract, and compare to generate the carry_in signal.
+
+Instruction Categories: The carry_in signal can be influenced by the following categories of instructions: 
+- Arithmetic instructions: add, subtract, multiply, divide
+- Bitwise instructions: and, or, xor, shift
+- Comparison instructions: equal, not equal, greater than, less than
+- Load and store instructions: load, store, move
+- Flag-setting instructions: set flag on carry, set flag on zero. 
+
+These instructions can be used in combination to create test programs that provoke the carry_in signal and test the correct handling of arithmetic operations that generate a carry.
+
+Net: carry_set_o
+
+High-Level Event: The processor sets the carry flag due to an arithmetic operation.
+
+Logical Summary & Reasoning: The carry_set_o signal is triggered when the processor performs an arithmetic operation that results in a carry. This can occur during addition or multiplication operations when the result exceeds the maximum value that can be represented by the register. The signal is also influenced by the presence of a divide-by-zero condition. The carry flag is set when the result of an operation requires a carry, indicating that the result has overflowed the register. This event is related to the execution stage of the pipeline, where the arithmetic operations are performed.
+
+Test-Stimulus Guidance: To provoke this event, software can use arithmetic operations such as addition, multiplication, or division that result in a carry or overflow. For example, adding two large numbers that result in a carry or performing a multiplication that exceeds the maximum value that can be represented by the register. Additionally, division by zero can also trigger this event. The test stimulus can be crafted using C code with operations such as `a + b`, `a * b`, or `a / b`, where `a` and `b` are chosen to provoke the carry or overflow condition.
+
+Instruction Categories: The instructions that influence this signal can be grouped into the following categories: 
+- Arithmetic instructions: addition, subtraction, multiplication, and division
+- Flag-setting instructions: instructions that set or clear flags, including the carry flag
+- Overflow-inducing instructions: instructions that can cause an overflow, such as adding two large numbers or multiplying two numbers that result in a large value.
+
+Net: cmov_result
+
+High-Level Event: Conditional move operation result is available.
+
+Logical Summary & Reasoning: The cmov_result signal is influenced by the conditional move (CMOV) feature, which is a part of the instruction set architecture. When the CMOV feature is enabled, the signal reflects the result of the conditional move operation, which is stored in the destination register. The CMOV instruction allows the processor to move data from one register to another based on a condition, such as a comparison result. The signal is generated in the execute stage of the pipeline, where the actual move operation takes place. The presence of this signal indicates that the processor has completed the evaluation of the condition and is ready to update the destination register with the result.
+
+Test-Stimulus Guidance: To provoke this signal, software engineers can write test programs that include CMOV instructions with various conditions, such as equality, inequality, greater-than, or less-than. The test program should exercise different scenarios, including when the condition is true and when it is false. For example, a test program could include a sequence of instructions like "if (a > b) then c = a; else c = b;", where the CMOV instruction is used to update the value of c based on the comparison result.
+
+Instruction Categories: The instructions that influence the cmov_result signal can be grouped into the following categories: 
+- Conditional move instructions (e.g., CMOV)
+- Comparison instructions (e.g., CMP)
+- Arithmetic instructions (e.g., ADD, SUB)
+- Logical instructions (e.g., AND, OR)
+- Control-flow instructions (e.g., IF, THEN, ELSE) 
+These instruction categories can be combined in various ways to exercise the CMOV feature and generate the cmov_result signal.
+
+Net: decode_a
+
+High-Level Event: Pipeline operand hazard due to decode stage dependency.
+
+Logical Summary & Reasoning: The decode_a signal is influenced by the CALCULATE_BRANCH_DEST flag, which indicates whether a branch destination is being calculated. When this flag is set to TRUE, the decode_a signal is driven by the dest signal, otherwise, it is driven by the mor1kx_cpu_cappuccino_decode_rfa_i signal. This suggests that the decode_a signal is related to the decoding of instructions and the handling of branch destinations. From a high-level perspective, this signal is trying to achieve the resolution of operand dependencies in the decode stage, ensuring that the correct operands are used for instruction execution.
+
+Test-Stimulus Guidance: To provoke a pipeline operand hazard due to decode stage dependency, software engineers can craft C test programs that include instructions with complex operand dependencies, such as load-dependent stores or branch-dependent instructions. For example, a test program could include a sequence of instructions like "load A, [B]; store [B], A;" where the load and store instructions have a dependency on the same register B. This would require the decode stage to resolve the operand dependency, potentially triggering a pipeline stall.
+
+Instruction Categories: The decode_a signal is influenced by instruction categories such as:
+* Branch instructions (e.g., beq, bne)
+* Load/store instructions (e.g., lw, sw)
+* Arithmetic/logical instructions (e.g., add, and)
+* Instructions with complex operand dependencies (e.g., load-dependent stores, branch-dependent instructions)
+
+Net: decode_b
+
+High-Level Event: Operand selection for instruction execution based on decode information.
+
+Logical Summary & Reasoning: The decode_b signal is influenced by the decode stage's determination of whether to calculate a branch destination or not. If a branch destination is being calculated, the signal takes on the value of the destination operand. Otherwise, it selects between an immediate value or a register file value based on the decode immediate select signal. This indicates that the signal is involved in the selection of operands for instruction execution, taking into account the type of instruction being decoded and the availability of immediate or register values.
+
+Test-Stimulus Guidance: To provoke this event, software can use a combination of branch instructions (e.g., conditional jumps or unconditional jumps) and instructions that use immediate or register operands (e.g., arithmetic or load/store instructions). For example, a test program could include a sequence of instructions that branch to a label, followed by instructions that use immediate values or register values as operands. This would exercise the decode_b signal's ability to select the correct operand based on the instruction type and decode information.
+
+Instruction Categories: The types of instructions that influence this signal can be grouped into categories such as: 
+- Branch instructions (e.g., conditional jumps, unconditional jumps)
+- Arithmetic instructions (e.g., add, subtract, multiply)
+- Load/store instructions (e.g., load word, store word)
+- Immediate-value instructions (e.g., load immediate, add immediate)
+- Register-value instructions (e.g., load register, add register)
+
+Net: decode_immediate_i
+
+High-Level Event: The processor is decoding an immediate value from an instruction, which will be used in an operation.
+
+Logical Summary & Reasoning: The decode_immediate_i signal is related to the decoding of immediate values from instructions. This process involves selecting the appropriate type of immediate value (e.g., sign-extended, zero-extended, or high immediate) based on the instruction's characteristics. The signal's purpose is to facilitate the extraction and preparation of immediate values for use in subsequent stages of the pipeline, such as the execution stage. This process is essential for the correct execution of instructions that rely on immediate values.
+
+Test-Stimulus Guidance: To provoke the decoding of an immediate value, a software engineer can write a C test program that includes instructions with immediate operands, such as arithmetic operations (e.g., `addi`, `subi`), logical operations (e.g., `andi`, `ori`), or load/store operations with immediate offsets (e.g., `lw`, `sw`). The test program can use various immediate values and instruction types to exercise the decoding process.
+
+Instruction Categories: The types of instructions that influence the decode_immediate_i signal can be grouped into categories such as: 
+1. Arithmetic instructions with immediate operands (e.g., add, sub, mul, div)
+2. Logical instructions with immediate operands (e.g., and, or, xor)
+3. Load/store instructions with immediate offsets (e.g., lw, sw, lh, sh)
+4. Branch instructions with immediate offsets (e.g., beq, bne, blt, bgt)
+These instruction categories can help software engineers create test programs that effectively exercise the decoding of immediate values.
+
+Net: decode_immediate_sel_i
+
+High-Level Event: The processor is selecting an immediate operand for an instruction, indicating a potential data hazard or operand dependency.
+
+Logical Summary & Reasoning: The decode_immediate_sel_i signal is influenced by the instruction decoding process, where the processor determines the type of immediate operand required for an instruction. This signal is related to the selection of immediate operands, which can be sign-extended, zero-extended, or high-immediate values. The processor must select the correct type of immediate operand to ensure correct instruction execution, which can impact the pipeline and instruction-level parallelism.
+
+Test-Stimulus Guidance: To provoke this event, software engineers can craft C test programs that include instructions with immediate operands, such as load, store, and arithmetic instructions with constant values. For example, using a mix of instructions with sign-extended and zero-extended immediate values can help trigger this event. Additionally, using instructions with high-immediate values can also influence this signal.
+
+Instruction Categories: The types of relevant instructions that influence this signal can be grouped into categories, including:
+* Immediate-load instructions (e.g., load immediate, load address)
+* Arithmetic instructions with immediate operands (e.g., add immediate, subtract immediate)
+* Logical instructions with immediate operands (e.g., and immediate, or immediate)
+* Control-flow instructions with immediate operands (e.g., branch, jump)
+* Instructions with high-immediate values (e.g., load high, store high)
+
+Net: decode_op_mul_i
+
+High-Level Event: Execution of a multiplication instruction.
+
+Logical Summary & Reasoning: The signal decode_op_mul_i is related to the decoding of a multiplication operation. This signal is influenced by the type of multiplication instruction, which can be either signed or unsigned. The decoding of this instruction is a critical step in the execution pipeline, as it determines the operation to be performed by the arithmetic logic unit (ALU). The signal is a result of the decode stage, where the instruction is broken down into its constituent parts, including the operation, operands, and any relevant flags.
+
+Test-Stimulus Guidance: To provoke the execution of a multiplication instruction, software can use C code that performs multiplication operations, such as "a = b * c;" or "d = e * f;". The use of multiplication instructions with different operand types, such as signed and unsigned integers, can also help to exercise this signal. Additionally, using multiplication instructions with various flag settings, such as overflow or carry flags, can provide further test coverage.
+
+Instruction Categories: The instruction categories that influence this signal include:
+- Arithmetic instructions: multiplication (signed and unsigned)
+- Flag-setting instructions: overflow, carry, and zero flags
+- Data transfer instructions: load and store operations that involve multiplication
+- Control flow instructions: conditional branches that depend on the result of a multiplication instruction.
+
+Net: decode_rfa_i
+
+High-Level Event: The processor is attempting to decode and fetch the first operand of an instruction from the register file.
+
+Logical Summary & Reasoning: The signal `decode_rfa_i` is related to the decoding and fetching of the first operand of an instruction from the register file. This process involves checking if the operand is available in the register file, and if not, determining whether to bypass the operand from a previous instruction or to fetch it from memory. The signal is influenced by various factors such as the type of instruction being executed, the availability of the operand, and the state of the pipeline. The processor's ability to handle hazards and stalls also plays a crucial role in determining the behavior of this signal.
+
+Test-Stimulus Guidance: To provoke this signal, a test program can be written to execute a series of instructions that require fetching operands from the register file. The program can include a mix of instructions with different operand availability, such as instructions with immediate operands, register operands, and memory operands. The program can also include instructions that cause hazards and stalls, such as load instructions with dependent stores, to test the processor's ability to handle these situations. Additionally, the program can be designed to test the bypassing of operands from previous instructions, by executing instructions with dependent operands in a specific order.
+
+Instruction Categories: The instructions that influence this signal can be categorized into the following groups:
+* Load and store instructions: These instructions require fetching operands from the register file and may cause hazards and stalls.
+* Arithmetic and logical instructions: These instructions require fetching operands from the register file and may use bypassing to reduce latency.
+* Control-flow instructions: These instructions, such as branches and jumps, may affect the pipeline and influence the behavior of the `decode_rfa_i` signal.
+* Instructions with immediate operands: These instructions do not require fetching operands from the register file, but may still influence the behavior of the signal due to their impact on the pipeline.
+
+Net: decode_rfb_i
+
+High-Level Event: The processor is fetching an operand from the register file.
+
+Logical Summary & Reasoning: The signal `decode_rfb_i` is related to the processor's instruction decode stage, where it is determining the source operands for the instruction. The signal is influenced by the instruction type, such as arithmetic, load, or store, and the availability of the operands. The processor's micro-architectural role in this context is to manage the flow of instructions and operands through the pipeline, ensuring that the correct data is available when needed. At the architectural level, this translates to the event of fetching an operand from the register file, which is a fundamental operation in the execution of most instructions.
+
+Test-Stimulus Guidance: To provoke this event, a test program can be written to execute a variety of instructions that require operand fetching from the register file, such as arithmetic operations (e.g., ADD, SUB, MUL), load and store instructions (e.g., LD, ST), and control-flow instructions (e.g., BEQ, BNE). The test program should also include a mix of instructions that use different operand sources, such as registers, immediates, and memory locations. Additionally, the test program can be designed to exercise different pipeline stages, such as the decode stage, to ensure that the `decode_rfb_i` signal is properly exercised.
+
+Instruction Categories: The instruction categories that influence the `decode_rfb_i` signal include:
+* Arithmetic instructions (e.g., ADD, SUB, MUL)
+* Load and store instructions (e.g., LD, ST)
+* Control-flow instructions (e.g., BEQ, BNE)
+* Instructions that use immediates or memory locations as operands
+* Instructions that require operand fetching from the register file.
+
+Net: decode_valid_i
+
+High-Level Event: Instruction decode is valid and ready for execution.
+
+Logical Summary & Reasoning: The signal `decode_valid_i` is a result of a complex dependency chain that involves various stages of the processor pipeline, including fetch, decode, and execution. It is influenced by factors such as instruction fetch validity, decode bubble conditions, and execution stalls. The signal is asserted when the decode stage has successfully decoded an instruction and it is ready for execution. This involves checking for conditions such as instruction fetch validity, absence of decode bubbles, and no execution stalls.
+
+Test-Stimulus Guidance: To provoke this signal, a test program can be crafted to execute a sequence of instructions that have varying decode complexities, such as simple arithmetic operations, control flow instructions, and load/store operations. The program should also include scenarios that cause decode bubbles, such as misaligned instructions or instructions that require multiple cycles to decode. Additionally, the program can include execution stalls, such as division or multiplication operations, to test the signal's behavior under different execution conditions.
+
+Instruction Categories: The following categories of instructions can influence the `decode_valid_i` signal:
+* Arithmetic and logical operations (e.g., add, sub, and, or)
+* Control flow instructions (e.g., branch, jump, call)
+* Load and store operations (e.g., lw, sw, lb, sb)
+* Multiply and divide operations
+* Floating-point operations (if supported by the processor)
+* Instructions that cause decode bubbles (e.g., misaligned instructions, instructions with complex decoding)
+
+Net: div_by_zero
+
+High-Level Event: Division by zero operation encountered, triggering an exception or error handling mechanism.
+
+Logical Summary & Reasoning: The div_by_zero signal is related to the detection of a division operation where the divisor is zero. This condition is typically considered an error or exception in most instruction set architectures. The signal's purpose is to indicate that the processor has encountered an invalid or undefined operation, requiring special handling or interruption of normal instruction execution. The underlying mechanism involves checking the divisor value during the execution of a division instruction, and if it is zero, triggering the div_by_zero signal to initiate appropriate error handling procedures.
+
+Test-Stimulus Guidance: To provoke the div_by_zero signal, a software test can include a division operation where the divisor is explicitly set to zero. This can be achieved through a simple C code snippet, such as `int result = 10 / 0;`, which will attempt to divide by zero and thus trigger the div_by_zero condition. Additionally, tests can be designed to verify that the processor correctly handles this exception, such as by checking the resulting error code or the execution of an exception handler routine.
+
+Instruction Categories: The instructions that influence the div_by_zero signal are primarily division instructions, including both integer and floating-point divisions. These instructions can be grouped into categories such as:
+- Integer division instructions (e.g., DIV, IDIV)
+- Floating-point division instructions (e.g., FDIV)
+- Modulus or remainder instructions that may also involve division (e.g., MOD, REM)
+These instruction categories are relevant because they involve division operations that can potentially result in a divisor of zero, triggering the div_by_zero signal.
+

@@ -1,0 +1,13 @@
+Net: ctrl_flag_clear
+
+High-Level Event: Flag clearing operation based on various arithmetic and comparison operations in the ALU unit.
+
+Logical Summary & Reasoning: The signal ctrl_flag_clear is determined by multiple conditions in the ALU unit, such as comparisons, arithmetic operations, and setting flags based on the outcome of these operations. It is controlled by the execution control logic depending on various input signals and conditions within the ALU unit.
+
+Test-Stimulus Guidance: To provoke the ctrl_flag_clear event, software can perform arithmetic operations like addition, subtraction, and comparison operations. It can also set specific flags and conditions that would trigger flag clearing in the ALU unit.
+
+Instruction Categories:
+1. Arithmetic Instructions: Operations like addition and subtraction influence the flag clearing behavior.
+2. Comparison Instructions: Instructions that involve comparing two values affect the flag clearing operation.
+3. Flag Setting Instructions: Setting specific flags based on certain conditions can lead to triggering flag clearing in the ALU unit.
+

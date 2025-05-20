@@ -1,0 +1,14 @@
+Net: exception_r
+
+High-Level Event: The processor encounters an exception that alters the normal flow of instruction execution, requiring a change in the program counter.
+
+Logical Summary & Reasoning: The exception_r signal is triggered when the processor encounters an exception, such as an invalid instruction, division by zero, or page fault, and the exception has not been previously taken or is not currently being handled. This signal is influenced by the occurrence of an exception and the current state of the processor's exception handling mechanism. The processor's control logic evaluates the exception condition and generates the exception_r signal to initiate the exception handling process.
+
+Test-Stimulus Guidance: To provoke the exception_r signal, a software engineer can write a test program that intentionally triggers an exception, such as dividing by zero, accessing an invalid memory location, or executing an undefined instruction. The test program can also include instructions that modify the processor's state, such as changing the program counter or modifying registers, to test the exception handling mechanism under different scenarios.
+
+Instruction Categories: Instructions that can influence the exception_r signal include: 
+- Arithmetic instructions that can result in overflow or division by zero (e.g., ADD, SUB, MUL, DIV)
+- Memory access instructions that can result in page faults or invalid memory accesses (e.g., LOAD, STORE)
+- Control flow instructions that can alter the program counter (e.g., JUMP, BRANCH)
+- Instructions that modify the processor's state, such as changing the program counter or modifying registers (e.g., MOV, XOR)
+

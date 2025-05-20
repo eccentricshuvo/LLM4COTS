@@ -1,0 +1,50 @@
+Net: decode_rf_wb_o
+High-Level Event: Completion of instruction decode and register file write-back
+Logical Summary: This net interacts with the instruction decode stage and register file write-back, indicating that the decode stage has finished processing an instruction and has written back the results to the register file, depending on the completion of previous pipeline stages and the availability of required resources.
+Reasoning: The assertion of this net suggests that the instruction decode stage has successfully completed its operations, including any necessary register file accesses, and has initiated the write-back of results to the register file, marking the end of the decode stage and the beginning of the write-back phase in the pipeline.
+
+Net: decode_opc_alu_secondary_o
+High-Level Event: ALU Operation Decode
+Logical Summary: This net is related to the decoding of ALU (Arithmetic Logic Unit) operations, specifically secondary operations, and is dependent on the instruction opcode and specific instruction bits (decode_insn_i[24:21] and decode_insn_i[8:6]).
+Reasoning: The decode_opc_alu_secondary_o net is asserted when the instruction decode stage determines that an ALU operation is required, and the specific operation is identified based on the instruction opcode and other control signals.
+
+Net: decode_op_div_signed_o
+High-Level Event: Signed Division Operation Decode
+Logical Summary: This net is asserted when the instruction opcode (opc_insn) is equal to {2'b11, 4'h8} and the ALU opcode (opc_alu) is equal to 4'h9, indicating a signed division operation.
+Reasoning: The decode_op_div_signed_o net is a control signal that indicates a signed division operation has been decoded from the instruction.
+
+Net: decode_opc_alu_o
+High-Level Event: ALU Operation Decode
+Logical Summary: This net is asserted when the instruction opcode (opc_insn) matches specific values ({2'b10, 4'hA}, {2'b10, 4'h9}, or {2'b10, 4'hB}), determining the corresponding ALU operation (4'h4, 4'h3, or 4'h5) or defaulting to the opc_alu value.
+Reasoning: The decode_opc_alu_o net decodes the instruction opcode to determine the ALU operation, selecting from predefined options or using the default value.
+
+Net: decode_opc_insn_o
+High-Level Event: Instruction Decode
+Logical Summary: This net is asserted when the opcode (opc_insn) is decoded, determining the type of instruction being executed.
+Reasoning: The decode_opc_insn_o net indicates the decoding of an instruction based on its opcode, which is a fundamental step in the instruction execution pipeline across various architectures.
+
+Net: decode_insn_i
+High-Level Event: Instruction Fetch
+Logical Summary: This net represents the instruction being fetched from memory, which is then decoded to determine its operation and operands.
+Reasoning: The decode_insn_i net carries the instruction data, which is a crucial step in the instruction execution pipeline, common to architectures like OpenRISC, RISC-V, ARM, and x86.
+
+Net: decode_op_div_unsigned_o
+High-Level Event: Division Operation Detection
+Logical Summary: This net is set when the instruction is detected as an unsigned division operation, based on the opcode and ALU operation.
+Reasoning: The decode_op_div_unsigned_o net indicates that the instruction is an unsigned division operation, which is a specific type of arithmetic instruction supported by various architectures, including OpenRISC, RISC-V, ARM, and x86.
+
+Net: decode_op_lsu_load_o
+High-Level Event: Load Operation Detection
+Logical Summary: This net is set when the instruction is detected as a load operation from memory, based on the opcode, instruction fields, and feature support for atomic operations.
+Reasoning: The decode_op_lsu_load_o net indicates that the instruction is a load operation, which is a common operation across architectures, including OpenRISC, RISC-V, ARM, and x86, used to transfer data from memory to registers.
+
+Net: decode_op_jbr_o
+High-Level Event: Jump Branch Instruction Detection
+Logical Summary: This net is set when the opcode and instruction fields match the pattern of a jump or branch instruction, specifically when the opcode is less than a certain value ({2'b00, 4'h5}).
+Reasoning: The decode_op_jbr_o net indicates that the instruction is a jump or branch instruction, which is a fundamental control-flow operation found in most architectures, including OpenRISC, RISC-V, ARM, and x86.
+
+Net: imm_high
+High-Level Event: Immediate Value High Part Selection
+Logical Summary: The imm_high net is related to the selection of the high part of an immediate value, which is used in instruction decoding, particularly when the opcode requires a 16-bit or 32-bit immediate value.
+Reasoning: The imm_high net is a signal that contributes to the decoding of immediate values in instructions, a common operation across architectures like OpenRISC, RISC-V, ARM, and x86, where immediate values are used in various instructions.
+

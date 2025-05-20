@@ -1,0 +1,167 @@
+Net: ctrl_lsu_adr_i
+High-Level Event: Instruction execution triggers load/store address generation.
+High-Level Summary: The ctrl_lsu_adr_i signal is associated with the generation of addresses for load and store operations. This signal is influenced by the execution of instructions that access memory, and is connected to architectural behaviors like address calculation, data alignment, and memory access. The types of instructions that influence this signal can be grouped into categories such as:
+ * Load instructions (e.g., load byte, load word)
+ * Store instructions (e.g., store byte, store word)
+ * Memory access instructions that require address calculation (e.g., load/store with offset)
+ * Instructions that update address registers or base registers for memory access
+ * Instructions that perform address calculations, such as:
+ + Addition and subtraction for address generation
+ + Address alignment and adjustment for memory access
+ * Instruction classes:
+  + Integer load/store instructions
+  + Floating-point load/store instructions (if applicable)
+  + Memory access instructions with specific alignment requirements
+
+```
+Net: ctrl_mfspr_ack_o
+High-Level Event: Instruction execution triggers a control signal for acknowledging a move from special register instruction.
+High-Level Summary: The ctrl_mfspr_ack_o signal is associated with the acknowledgment of special register access during the execution of specific instructions. This signal is influenced by the execution of instructions that involve special register operations, such as moving data from special registers to general-purpose registers. The types of instructions that influence this signal can be grouped into categories such as:
+ * Special register move instructions (e.g., mfspr, mtspr)
+ * Instructions that access special registers for performance counters, timers, or other architectural features
+ * Instructions that involve context switching or fast context switching
+ * Instructions that access debug or testing features
+```
+
+```
+Net: ctrl_mtspr_ack_o
+High-Level Event: Instruction execution triggers special register access acknowledgement.
+High-Level Summary: The ctrl_mtspr_ack_o signal is associated with the acknowledgement of special register accesses during instruction execution. This signal is influenced by the execution of instructions that perform special register accesses, and is connected to architectural behaviors like special register updates and data handling.
+
+The types of instructions that influence this signal can be grouped into categories such as:
+ * Special register access instructions (e.g., MTSR, MFSR)
+ * Instructions that update special registers, such as:
+   + Performance counters
+   + Timer registers
+   + Debug registers
+   + Floating-point control registers
+ * Instructions that handle data in special registers, such as:
+   + Loads and stores to special registers
+   + Moves between special registers and general-purpose registers
+```
+
+Net: ctrl_op_mfspr_i
+High-Level Event: Instruction execution triggers reading from special purpose registers.
+High-Level Summary: The ctrl_op_mfspr_i signal is associated with the execution of instructions that read from special purpose registers. This signal is influenced by the execution of instructions that perform moves from special purpose registers, and is connected to architectural behaviors like register access and instruction execution. The types of instructions that influence this signal can be grouped into categories such as:
+ * Instructions that read from special purpose registers (e.g., mfspr)
+ * Instructions that access control registers
+ * Instructions that load data from special purpose registers
+ * Privileged instructions that access system control registers
+ * Instructions that update the program counter or other special registers
+ * Exception handling instructions that access special registers.
+
+Net: ctrl_op_mtspr_i
+High-Level Event: Instruction execution triggers move to special register.
+High-Level Summary: The ctrl_op_mtspr_i signal is associated with the movement of data into special registers during the execution of specific instructions. This signal is influenced by the execution of instructions that perform moves to special registers, and is connected to architectural behaviors like special register updates. The types of instructions that influence this signal can be grouped into categories such as:
+ * Instructions that move data into special registers (e.g., MTSR, MTSPR)
+ * Instructions that update special registers as part of their execution (e.g., privileged instructions)
+ * Instructions that access control registers or status registers
+ * Instructions that manipulate special registers, such as:
+  + Moves to special registers (e.g., counter registers, timer registers)
+  + Privileged instructions that update special registers (e.g., interrupt handling, exception handling)
+
+Net: ctrl_op_rfe_i
+High-Level Event: Instruction execution triggers control operation for register file enable.
+High-Level Summary: The ctrl_op_rfe_i signal is associated with controlling the register file enable during instruction execution. This signal is influenced by the execution of instructions that require register file access, and is connected to architectural behaviors like operand fetching, instruction decoding, and execution. The types of instructions that influence this signal can be grouped into categories such as:
+* Instructions that require register operands (e.g., arithmetic, logical, load/store)
+* Control flow instructions (e.g., branches, jumps)
+* Instructions that perform context switches or privilege changes
+* Instructions that access or modify registers, such as:
+  + Register-to-register operations (e.g., move, add, subtract)
+  + Load and store instructions
+  + Instructions with register-immediate operands
+* Instructions that affect the control flow or require special handling, such as:
+  + Conditional branches (e.g., equal, not equal, less than)
+  + Unconditional branches (e.g., jumps)
+  + Return instructions (e.g., from subroutine, from interrupt handler)
+
+Net: ctrl_overflow_clear_i
+High-Level Event: Instruction execution triggers overflow flag clearing.
+High-Level Summary: The ctrl_overflow_clear_i signal is associated with the clearing of overflow flags during the execution of specific instructions. This signal is influenced by the execution of instructions that perform arithmetic operations, and is connected to architectural behaviors like flag setting and clearing. The types of instructions that influence this signal can be grouped into categories such as:
+
+* Arithmetic instructions with overflow flag-setting capabilities (e.g., add, subtract, multiply)
+* Instructions that update overflow flags based on operation results, such as:
+  + Arithmetic operations that set overflow flags (e.g., signed add, signed multiply)
+* Flag-manipulating instructions (e.g., clearing overflow flags)
+
+JSON format:
+
+```
+{
+  "Net": "ctrl_overflow_clear_i",
+  "High-Level Event": "Instruction execution triggers overflow flag clearing.",
+  "High-Level Summary": "The ctrl_overflow_clear_i signal is associated with the clearing of overflow flags during the execution of specific instructions.",
+  "Influencing Instruction Categories": [
+    {
+      "category": "Arithmetic instructions with overflow flag-setting capabilities",
+      "examples": ["add", "subtract", "multiply"]
+    },
+    {
+      "category": "Instructions that update overflow flags based on operation results",
+      "examples": ["signed add", "signed multiply"]
+    },
+    {
+      "category": "Flag-manipulating instructions",
+      "examples": ["clearing overflow flags"]
+    }
+  ]
+}
+```
+
+Net: ctrl_overflow_set_i
+High-Level Event: Instruction execution triggers overflow flag setting.
+High-Level Summary: The ctrl_overflow_set_i signal is associated with the setting of overflow flags during the execution of specific instructions. This signal is influenced by the execution of instructions that perform arithmetic operations, and is connected to architectural behaviors like flag setting, arithmetic overflows, and signed/unsigned operations. The types of instructions that influence this signal can be grouped into categories such as:
+
+* Arithmetic instructions with overflow-setting capabilities (e.g., add, subtract, multiply)
+* Signed arithmetic instructions that set overflow flags (e.g., signed add, signed multiply)
+* Instructions that update flags based on operation results, such as:
+  + Arithmetic operations that set overflow flags (e.g., carry, overflow)
+  + Signed comparisons that set overflow flags
+  + Multiplication and division operations that set overflow flags
+
+```json
+{
+  "Net": "ctrl_overflow_set_i",
+  "High-Level Event": "Instruction execution triggers overflow flag setting.",
+  "High-Level Summary": "The ctrl_overflow_set_i signal is associated with the setting of overflow flags during the execution of specific instructions. This signal is influenced by the execution of instructions that perform arithmetic operations, and is connected to architectural behaviors like flag setting, arithmetic overflows, and signed/unsigned operations. The types of instructions that influence this signal can be grouped into categories such as:",
+  "Influencing Instruction Categories": [
+    "* Arithmetic instructions with overflow-setting capabilities (e.g., add, subtract, multiply)",
+    "* Signed arithmetic instructions that set overflow flags (e.g., signed add, signed multiply)",
+    "* Instructions that update flags based on operation results, such as:",
+    "  + Arithmetic operations that set overflow flags (e.g., carry, overflow)",
+    "  + Signed comparisons that set overflow flags",
+    "  + Multiplication and division operations that set overflow flags"
+  ]
+}
+```
+
+```
+Net: ctrl_rfb_i
+High-Level Event: Instruction execution triggers conditional flag clearing and result forwarding.
+High-Level Summary: The ctrl_rfb_i signal is associated with the execution of instructions that perform comparisons, arithmetic operations, and result forwarding. This signal is influenced by the execution of instructions that update flags and forward results to dependent instructions. The types of instructions that influence this signal can be grouped into categories such as:
+ * Arithmetic instructions with flag-setting capabilities (e.g., add, subtract)
+ * Comparison instructions (e.g., equal, not equal, less than)
+ * Logical instructions with flag-setting capabilities (e.g., AND, OR, XOR)
+ * Flag-manipulating instructions (e.g., setting carry, overflow, or zero flags)
+ * Instructions that update flags based on operation results, such as:
+   + Equality checks (e.g., equal, not equal)
+   + Ordering comparisons (e.g., less than, greater than)
+   + Signed and unsigned comparisons
+   + Arithmetic operations that set flags (e.g., carry, overflow)
+```
+
+```
+Net: ctrl_stage_exceptions
+High-Level Event: Instruction execution triggers exceptions during the execution stage.
+High-Level Summary: The ctrl_stage_exceptions signal is associated with the triggering of exceptions during the execution stage of instructions. This signal is influenced by the execution of instructions that lead to various exceptions, including alignment, bus errors, range errors, floating-point unit (FPU) exceptions, data translation lookaside buffer (DTLB) misses, and data page faults. The types of instructions or operations that influence this signal can be grouped into categories such as:
+
+* Load and store instructions that result in alignment errors
+* Instructions that access invalid or non-existent memory locations, leading to bus errors
+* Instructions that operate outside defined ranges, causing range errors
+* Floating-point instructions that result in FPU exceptions
+* Memory access instructions that cause DTLB misses
+* Memory access instructions that result in data page faults
+
+These instruction categories are related to architectural behaviors like exception handling, memory management, and execution stage control.
+```
+

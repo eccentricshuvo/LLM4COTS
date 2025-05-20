@@ -1,0 +1,328 @@
+[
+  {
+    "Net": "decode_op_lsu_store_o",
+    "High-Level Event": "Identification of a load/store instruction for storage operations",
+    "Logical Summary": "This expression signifies that a load/store instruction for storage operations is identified when the opcode (opc_insn) matches specific values ({2'b11, 4'h5}, {2'b11, 4'h6}, or {2'b11, 4'h7}), which are associated with store operations, or when the opcode is {2'b11, 4'h3} and the FEATURE_ATOMIC is not NONE, indicating an atomic operation.",
+    "Reasoning": "The logical expression in the JSON text format indicates that the net decode_op_lsu_store_o is set when specific opcodes are detected, which are related to load/store instructions for storage operations, as outlined in the instruction set architecture of the target processor."
+  },
+  {
+    "Net": "decode_rfa_adr_o",
+    "High-Level Event": "Register File Address Generation",
+    "Logical Summary": "This event is triggered when the instruction decoding process requires the generation of a register file address, as indicated by the equality between the left-hand side (lhs) signal \"decode_rfa_adr_o\" and the right-hand side (rhs) signal \"decode_insn_i[20:16]\". This implies that the instruction's opcode or specific bits within the instruction are used to determine the register file address.",
+    "Reasoning": "The net decode_rfa_adr_o is set when the instruction's bits [20:16] are used to generate a register file address, indicating that the instruction requires access to a specific register."
+  },
+  {
+    "Net": "decode_op_brcond_o",
+    "High-Level Event": "Branch Condition Decode",
+    "Logical Summary": "This event is triggered when the instruction decoding process encounters a branch condition, as indicated by the logical OR operation between \"decode_op_bf_o\" and \"decode_op_bnf_o\", suggesting that the instruction is either a conditional branch or a conditional branch with no flag update.",
+    "Reasoning": "The net decode_op_brcond_o is set when a branch condition is detected in the instruction, indicating that the instruction requires evaluation of a condition to determine the next program counter."
+  },
+  {
+    "Net": "decode_op_movhi_o",
+    "High-Level Event": "Move High Immediate Instruction Detection",
+    "Logical Summary": "This event is triggered when the instruction decoding process identifies a \"movhi\" instruction, which is indicated by the equality check between the opcode and a specific value ({2'b00, 4'h6}), suggesting that the instruction is a move high immediate operation.",
+    "Reasoning": "The net decode_op_movhi_o is set when a move high immediate instruction is detected, indicating that the instruction requires moving a high immediate value to a register."
+  },
+  {
+    "Net": "decode_except_illegal_o",
+    "High-Level Event": "Detection of an illegal instruction exception",
+    "Logical Summary": "This net signifies that an exception occurs when an illegal instruction is encountered during the decode stage, potentially due to an invalid opcode, an undefined instruction, or an instruction that is not supported by the current architecture mode.",
+    "Reasoning": "The generation of the `decode_except_illegal_o` signal suggests that the decoder has identified an instruction that does not conform to the expected format or is not valid in the current execution context, triggering an exception handling mechanism to manage the error."
+  },
+  {
+    "Net": "decode_adder_do_carry_o",
+    "High-Level Event": "Addition with carry instruction decoding",
+    "Logical Summary": "This net is related to the decoding of an instruction that involves an addition operation with a carry, indicating that the instruction set architecture (ISA) supports arithmetic operations that can generate or utilize a carry flag.",
+    "Reasoning": "The presence of `decode_adder_do_carry_o` suggests that the processor architecture (OpenRISC, RISC-V, ARM, x86) supports instructions that can perform addition with carry, which is a fundamental arithmetic operation used in various computational tasks."
+  },
+  {
+    "Net": "decode_adder_do_sub_o",
+    "High-Level Event": "Subtraction instruction decoding",
+    "Logical Summary": "This net is related to the decoding of an instruction that involves a subtraction operation, indicating that the instruction set architecture (ISA) supports arithmetic operations that can perform subtractions.",
+    "Reasoning": "The presence of `decode_adder_do_sub_o` suggests that the processor architecture (OpenRISC, RISC-V, ARM, x86) supports instructions that can perform subtraction, which is a fundamental arithmetic operation used in various computational tasks."
+  },
+  {
+    "Net": "decode_op_mfspr_o",
+    "High-Level Event": "Move from Special Purpose Register instruction decoding",
+    "Logical Summary": "This net is related to the decoding of an instruction that moves data from a special purpose register, indicating that the instruction set architecture (ISA) supports the movement of data between special purpose registers and other registers.",
+    "Reasoning": "The presence of `decode_op_mfspr_o` suggests that the processor architecture (OpenRISC, RISC-V, ARM, x86) supports instructions that can move data from special purpose registers, which is a common operation used to access and manipulate system control registers, status registers, or other specialized registers."
+  },
+  {
+    "Net": "decode_immediate_o",
+    "High-Level Event": "Immediate instruction decoding",
+    "Logical Summary": "This net is related to the decoding of an instruction that contains an immediate value, indicating that the instruction set architecture (ISA) supports instructions with embedded constant values.",
+    "Reasoning": "The presence of `decode_immediate_o` suggests that the processor architecture (OpenRISC, RISC-V, ARM, x86) supports instructions with immediate operands, which are used to perform operations with constant values, such as load immediate, add immediate, or compare immediate."
+  },
+  {
+    "Net": "decode_op_bf_o",
+    "High-Level Event": "Branch instruction decoding",
+    "Logical Summary": "This net is related to the decoding of a branch instruction, specifically when the opcode (opc_insn) matches a certain value ({2'b00, 4'h4}), indicating a conditional branch operation.",
+    "Reasoning": "The decoding of `decode_op_bf_o` implies that the architecture supports conditional branch instructions, which are used to alter the control flow based on certain conditions, and this specific decoding is triggered by a particular opcode."
+  },
+  {
+    "Net": "decode_op_mul_signed_o",
+    "High-Level Event": "Signed multiplication instruction decoding",
+    "Logical Summary": "This net is related to the decoding of a signed multiplication instruction, which is triggered when the opcode (opc_insn) matches specific values ({2'b11, 4'h8} or {2'b10, 4'hC}) and the ALU opcode (opc_alu) equals 4'h6.",
+    "Reasoning": "The decoding of `decode_op_mul_signed_o` indicates that the architecture supports signed multiplication instructions, which are used for arithmetic operations."
+  },
+  {
+    "Net": "decode_op_mtspr_o",
+    "High-Level Event": "Move to Special Purpose Register instruction decoding",
+    "Logical Summary": "This net is set when the opcode (opc_insn) equals a specific value ({2'b11, 4'h0}), indicating a Move to Special Purpose Register (MTSPR) instruction.",
+    "Reasoning": "The decoding of `decode_op_mtspr_o` signifies that the processor supports MTSPR instructions, which are used to transfer data between general-purpose registers and special-purpose registers."
+  },
+  {
+    "Net": "decode_op_bnf_o",
+    "High-Level Event": "Branch if Not Equal Flag instruction decoding",
+    "Logical Summary": "This net is set when the opcode (opc_insn) equals a specific value ({2'b00, 4'h3}), indicating a Branch if Not Equal Flag (BNF) instruction.",
+    "Reasoning": "The decoding of `decode_op_bnf_o` signifies that the processor supports conditional branch instructions based on flag conditions."
+  },
+  {
+    "Net": "decode_op_msync_o",
+    "High-Level Event": "Memory Synchronization instruction decoding",
+    "Logical Summary": "This net is set when the FEATURE_MSYNC is not NONE, the opcode (opc_insn) equals a specific value ({2'b00, 4'h8}), and the instruction opcode decode_insn_i[25:23] equals 3'h4, indicating a Memory Synchronization (MSYNC) instruction.",
+    "Reasoning": "The decoding of `decode_op_msync_o` signifies that the processor supports memory synchronization instructions, which are used to ensure data coherence across the system."
+  },
+  {
+    "Net": "decode_op_mul_o",
+    "High-Level Event": "Multiplication instruction decoding",
+    "Logical Summary": "This net is set when either a signed or unsigned multiplication operation is decoded, as indicated by the logical OR operation between `decode_op_mul_signed_o` and `decode_op_mul_unsigned_o`.",
+    "Reasoning": "The decoding of `decode_op_mul_o` signifies that the processor has encountered a multiplication instruction, which can be either signed or unsigned, and is preparing to execute the corresponding operation."
+  },
+  {
+    "Net": "decode_immediate_sel_o",
+    "High-Level Event": "Selection of immediate operand decoding mode",
+    "Logical Summary": "This expression indicates that the decode_immediate_sel_o signal is asserted when either sign-extension (imm_sext_sel), zero-extension (imm_zext_sel), or high immediate selection (imm_high_sel) is chosen, determining how an immediate operand is decoded.",
+    "Reasoning": "The logical expression suggests that decode_immediate_sel_o is responsible for selecting the appropriate decoding mode for immediate operands, which is a crucial step in the instruction decode stage of a processor pipeline, influencing how instructions are executed based on the operand's encoding."
+  },
+  {
+    "Net": "decode_op_branch_o",
+    "High-Level Event": "Branch operation decoding",
+    "Logical Summary": "The expression indicates that decode_op_branch_o is asserted when either a branch (decode_op_jbr_o), jump register (decode_op_jr_o), or jump and link (decode_op_jal_o) operation is decoded, suggesting a control flow change in the program.",
+    "Reasoning": "The decode_op_branch_o signal is related to identifying instructions that alter the program counter, which is a fundamental aspect of controlling program flow across different architectures."
+  },
+  {
+    "Net": "decode_op_ext_o",
+    "High-Level Event": "Extension operation decoding",
+    "Logical Summary": "The expression indicates that decode_op_ext_o is asserted when a specific opcode (opc_insn = {2'b11, 4'h8}) and a specific ALU opcode (opc_alu = 4'hc or 4'hd) are detected, and the FEATURE_EXT is not NONE, suggesting an extension operation is being decoded.",
+    "Reasoning": "The decode_op_ext_o signal is related to identifying instructions that require extension operations, which is a common feature across various architectures (OpenRISC, RISC-V, ARM, x86) for supporting specialized or complex instructions."
+  },
+  {
+    "Net": "decode_op_shift_o",
+    "High-Level Event": "Shift operation decoding",
+    "Logical Summary": "The expression indicates that decode_op_shift_o is asserted when either a specific opcode (opc_insn = {2'b11, 4'h8}) and a specific ALU opcode (opc_alu = 4'h8) are detected, or another specific opcode (opc_insn = {2'b10, 4'hE}) is detected, suggesting a shift operation is being decoded.",
+    "Reasoning": "The decode_op_shift_o signal is related to identifying instructions that involve shift operations, a fundamental aspect of instruction sets across architectures (OpenRISC, RISC-V, ARM, x86)."
+  },
+  {
+    "Net": "decode_except_syscall_o",
+    "High-Level Event": "Exception handling for non-syscall instructions",
+    "Logical Summary": "The expression indicates that decode_except_syscall_o is asserted when the opcode (opc_insn) matches a specific pattern ({2'b00, 4'h8}) and the instruction opcode subset (decode_insn_i[25:23]) equals 0, suggesting an exception condition for instructions that are not syscalls.",
+    "Reasoning": "The decode_except_syscall_o signal is involved in handling exceptions for instructions that do not involve system calls, which is a critical aspect of exception handling mechanisms across various architectures (OpenRISC, RISC-V, ARM, x86)."
+  },
+  {
+    "Net": "decode_op_mul_unsigned_o",
+    "High-Level Event": "Unsigned multiplication operation decoding",
+    "Logical Summary": "The expression indicates that decode_op_mul_unsigned_o is asserted when the opcode (opc_insn) equals a specific value ({2'b11, 4'h8}) and the ALU opcode (opc_alu) equals 0xb, suggesting a decoding event for unsigned multiplication operations.",
+    "Reasoning": "The decode_op_mul_unsigned_o signal is involved in identifying unsigned multiplication operations, which is a fundamental aspect of arithmetic logic units across various architectures (OpenRISC, RISC-V, ARM, x86)."
+  },
+  {
+    "Net": "decode_op_rfe_o",
+    "High-Level Event": "Return from exception handling",
+    "Logical Summary": "The expression {\"lhs\": \"decode_op_rfe_o\", \"rhs\": \"(opc_insn EQUAL EQUAL {2'b00, 4'h9})\"} indicates that decode_op_rfe_o is asserted when the opcode (opc_insn) matches a specific value ({2'b00, 4'h9}), suggesting a decoding event for return from exception handling instructions.",
+    "Reasoning": "The decode_op_rfe_o signal is involved in identifying return from exception handling operations, which is a crucial aspect of exception handling mechanisms across various architectures (OpenRISC, RISC-V, ARM, x86)."
+  },
+  {
+    "Net": "decode_op_setflag_o",
+    "High-Level Event": "Setting flags based on instruction type",
+    "Logical Summary": "The expression {\"lhs\": \"decode_op_setflag_o\", \"rhs\": \"((opc_insn EQUAL EQUAL {2'b11, 4'h9}) OROR (opc_insn EQUAL EQUAL {2'b10, 4'hF}))\"} indicates that decode_op_setflag_o is asserted when the opcode (opc_insn) matches specific values ({2'b11, 4'h9} or {2'b10, 4'hF}), suggesting a decoding event for instructions that set flags.",
+    "Reasoning": "The decode_op_setflag_o signal is involved in identifying instructions that modify flags, which is a common operation across various architectures (OpenRISC, RISC-V, ARM, x86) for conditional execution and control flow management."
+  },
+  {
+    "Net": "decode_immjbr_upper_o",
+    "High-Level Event": "Instruction decoding for jump targets",
+    "Logical Summary": "The JSON expression {\"lhs\": \"decode_immjbr_upper_o\", \"rhs\": \"decode_insn_i[25:16]\"} suggests that decode_immjbr_upper_o is related to the decoding of immediate values, specifically the upper part of a jump target address, extracted from the instruction bits 25:16.",
+    "Reasoning": "The decode_immjbr_upper_o signal is involved in the decoding process of instructions that specify jump targets, which is a fundamental operation across architectures (OpenRISC, RISC-V, ARM, x86) for controlling program flow."
+  },
+  {
+    "Net": "decode_op_div_o",
+    "High-Level Event": "Division operation decoding",
+    "Logical Summary": "The JSON expression {\"lhs\": \"decode_op_div_o\", \"rhs\": \"(decode_op_div_signed_o OR decode_op_div_unsigned_o)\"} indicates that decode_op_div_o is set when either a signed or unsigned division operation is decoded.",
+    "Reasoning": "The decode_op_div_o signal is involved in identifying division instructions, which is a common arithmetic operation supported across various architectures (OpenRISC, RISC-V, ARM, x86)."
+  },
+  {
+    "Net": "decode_rf_wb_o",
+    "High-Level Event": "Completion of instruction decode and register file write-back",
+    "Logical Summary": "This net interacts with the instruction decode stage and register file write-back, indicating that the decode stage has finished processing an instruction and has written back the results to the register file, depending on the completion of previous pipeline stages and the availability of required resources."
+  },
+  {
+    "Net": "decode_opc_alu_secondary_o",
+    "High-Level Event": "ALU Operation Decode",
+    "Logical Summary": "This net is related to the decoding of ALU (Arithmetic Logic Unit) operations, specifically secondary operations, and is dependent on the instruction opcode and specific instruction bits (decode_insn_i[24:21] and decode_insn_i[8:6])."
+  },
+  {
+    "Net": "decode_op_div_signed_o",
+    "High-Level Event": "Signed Division Operation Decode",
+    "Logical Summary": "This net is asserted when the instruction opcode (opc_insn) is equal to {2'b11, 4'h8} and the ALU opcode (opc_alu) is equal to 4'h9, indicating a signed division operation."
+  },
+  {
+    "Net": "decode_opc_alu_o",
+    "High-Level Event": "ALU Operation Decode",
+    "Logical Summary": "This net is asserted when the instruction opcode (opc_insn) matches specific values ({2'b10, 4'hA}, {2'b10, 4'h9}, or {2'b10, 4'hB}), determining the corresponding ALU operation (4'h4, 4'h3, or 4'h5) or defaulting to the opc_alu value."
+  },
+  {
+    "Net": "decode_opc_insn_o",
+    "High-Level Event": "Instruction Decode",
+    "Logical Summary": "This net is asserted when the opcode (opc_insn) is decoded, determining the type of instruction being executed."
+  },
+  {
+    "Net": "decode_insn_i",
+    "High-Level Event": "Instruction Fetch",
+    "Logical Summary": "This net represents the instruction being fetched from memory, which is then decoded to determine its operation and operands."
+  },
+  {
+    "Net": "decode_op_div_unsigned_o",
+    "High-Level Event": "Division Operation Detection",
+    "Logical Summary": "This net is set when the instruction is detected as an unsigned division operation, based on the opcode and ALU operation."
+  },
+  {
+    "Net": "decode_op_lsu_load_o",
+    "High-Level Event": "Load Operation Detection",
+    "Logical Summary": "This net is set when the instruction is detected as a load operation from memory, based on the opcode, instruction fields, and feature support for atomic operations."
+  },
+  {
+    "Net": "decode_op_jbr_o",
+    "High-Level Event": "Jump Branch Instruction Detection",
+    "Logical Summary": "This net is set when the opcode and instruction fields match the pattern of a jump or branch instruction, specifically when the opcode is less than a certain value ({2'b00, 4'h5})."
+  },
+  {
+    "Net": "imm_high",
+    "High-Level Event": "Immediate Value High Part Selection",
+    "Logical Summary": "The imm_high net is related to the selection of the high part of an immediate value, which is used in instruction decoding, particularly when the opcode requires a 16-bit or 32-bit immediate value."
+  },
+  {
+    "Net": "decode_except_trap_o",
+    "High-Level Event": "Generation of a trap exception during instruction decoding",
+    "Logical Summary": "This expression signifies that a trap exception occurs when the opcode of the instruction (`opc_insn`) matches a specific value (`{2'b00, 4'h8}`) and the instruction's funct field (`decode_insn_i[25:23]`) equals `3'h2`. This implies a specific instruction is being decoded that triggers an exception.",
+    "Reasoning": "The condition indicates a specific instruction opcode and funct code are being checked, suggesting the architecture has a defined mechanism for trapping on certain instructions, likely for system calls, breakpoints, or other software interrupts, consistent with architectures like RISC-V, x86, and ARM that have similar exception mechanisms for specific instructions."
+  },
+  {
+    "Net": "decode_rfb_adr_o",
+    "High-Level Event": "Register File Base Address Generation",
+    "Logical Summary": "The expression {\"lhs\": \"decode_rfb_adr_o\", \"rhs\": \"decode_insn_i[15:11]\"} indicates that the register file base address (`decode_rfb_adr_o`) is derived from a subset of the instruction bits (`decode_insn_i[15:11]`), suggesting that the base address for register file access is encoded within the instruction itself.",
+    "Reasoning": "This implies the architecture uses instruction bits to determine the base address of the register file, which is a common approach in various architectures (OpenRISC, RISC-V, ARM, x86) to specify operands or addresses within instructions."
+  },
+  {
+    "Net": "decode_except_ibus_align",
+    "High-Level Event": "Instruction Bus Alignment Exception Detection",
+    "Logical Summary": "The expression related to `decode_except_ibus_align` suggests that it is involved in detecting alignment exceptions that occur during instruction fetch from the instruction bus, indicating a potential misalignment in the instruction memory access.",
+    "Reasoning": "This implies the architecture (OpenRISC, RISC-V, ARM, x86) has a mechanism to detect and handle alignment exceptions for instructions, ensuring proper instruction fetching and execution."
+  },
+  {
+    "Net": "decode_rfd_adr_o",
+    "High-Level Event": "Register File Destination Address Generation",
+    "Logical Summary": "The expression `(decode_op_jal_o) IF TRUE (5'd9) OTHERWISE (decode_insn_i[25:21])` indicates that the `decode_rfd_adr_o` net is responsible for generating the destination register address, choosing between a fixed value (5'd9) when the JAL (Jump and Link) operation is detected and a field from the instruction (decode_insn_i[25:21]) for other operations.",
+    "Reasoning": "This suggests the architecture uses a specific register for link operations (like JAL) and dynamically determines the destination register for other instructions, based on the instruction opcode and operands."
+  },
+  {
+    "Net": "decode_lsu_length_o",
+    "High-Level Event": "Load/Store Unit Transaction Length Determination",
+    "Logical Summary": "The expression for `decode_lsu_length_o` suggests it determines the length of a load/store unit (LSU) transaction, which could be based on the instruction type (e.g., byte, halfword, word) and potentially the specific LSU operation (load or store).",
+    "Reasoning": "This net is crucial for managing data transfer sizes between the processor and memory, ensuring that the correct amount of data is moved based on the instruction, which is fundamental across architectures like OpenRISC, RISC-V, ARM, and x86 for memory access operations."
+  },
+  {
+    "Net": "decode_op_ffl1_o",
+    "High-Level Event": "Instruction Decode and Operand Identification",
+    "Logical Summary": "The expression for `decode_op_ffl1_o` involves decoding an instruction and checking its opcode (`opc_insn`) and specific bits within the instruction (`decode_insn_i[9:8]`) to determine the operation type, possibly related to floating-point or load/store operations, given the involvement of `opc_alu`.",
+    "Reasoning": "This net plays a role in the instruction decode stage, identifying the type of operation (e.g., floating-point, load/store) and potentially the operands involved, which is a critical step in the execution pipeline across various architectures (OpenRISC, RISC-V, ARM, x86)."
+  },
+  {
+    "Net": "imm_zext",
+    "High-Level Event": "Immediate Value Zero Extension",
+    "Logical Summary": "The expression for `imm_zext` involves replicating a value (likely a sign bit or a specific pattern) and concatenating it with the lower 16 bits of `decode_imm16_o`, which suggests a zero-extension operation for immediate values.",
+    "Reasoning": "This net is responsible for zero-extending immediate values, which is a common operation across architectures (OpenRISC, RISC-V, ARM, x86) to ensure that immediate values are properly aligned and represented for further processing."
+  },
+  {
+    "Net": "imm_sext",
+    "High-Level Event": "Immediate Value Sign Extension",
+    "Logical Summary": "The expression for `imm_sext` involves sign-extending a 16-bit immediate value (`decode_imm16_o[15:0]`) using a repeat operation, which suggests that the sign bit of the immediate value is being replicated to fill the upper bits.",
+    "Reasoning": "This net is responsible for sign-extending immediate values, a fundamental operation across architectures (OpenRISC, RISC-V, ARM, x86) to ensure that immediate values with negative sign bits are properly represented for further processing."
+  },
+  {
+    "Net": "decode_op_fpu_o",
+    "High-Level Event": "Floating Point Operation Decode",
+    "Logical Summary": "The expression for `decode_op_fpu_o` involves checking the opcode (`opc_insn`) for specific values (`{2'b11, 4'h2}`) and ensuring that a particular instruction bit (`decode_insn_i[4]`) is not set, suggesting a conditional decode for floating-point operations.",
+    "Reasoning": "This net indicates the decoding of floating-point operations, which is a common architectural feature across various instruction set architectures (OpenRISC, RISC-V, ARM, x86) that support floating-point processing."
+  },
+  {
+    "Net": "imm_high_sel",
+    "High-Level Event": "Immediate Value Selection",
+    "Logical Summary": "The expression for `imm_high_sel` is directly assigned the value of `decode_op_movhi_o`, indicating that `imm_high_sel` is selected when the decode operation is a move high immediate instruction.",
+    "Reasoning": "This net suggests that the architecture (OpenRISC, RISC-V, ARM, x86) uses `imm_high_sel` to select a specific part of an immediate value, likely for loading into a register, which is a common operation across these architectures."
+  },
+  {
+    "Net": "imm_sext_sel",
+    "High-Level Event": "Sign-Extended Immediate Selection",
+    "Logical Summary": "The expression for `imm_sext_sel` involves various conditions based on the `opc_insn` value, indicating that sign-extension of an immediate value is selected under specific instruction opcode conditions.",
+    "Reasoning": "This net suggests that the architecture selects sign-extended immediate values for specific instructions, which is a common requirement across architectures (OpenRISC, RISC-V, ARM, x86) for handling signed immediate operands."
+  },
+  {
+    "Net": "decode_lsu_zext_o",
+    "High-Level Event": "Load/Store Unit Zero Extension",
+    "Logical Summary": "The net `decode_lsu_zext_o` is connected to `opc_insn[0]`, indicating that a zero extension operation is controlled by the opcode of the instruction, specifically for load/store unit operations.",
+    "Reasoning": "This suggests that the architecture (across OpenRISC, RISC-V, ARM, x86) performs zero extension on load/store unit operations based on the instruction opcode, which is a common technique for handling data alignment and size mismatches."
+  },
+  {
+    "Net": "decode_op_jal_o",
+    "High-Level Event": "Jump and Link Instruction",
+    "Logical Summary": "The net `decode_op_jal_o` is set when the opcode instruction (`opc_insn`) matches specific values (`{2'b01, 4'h2}` or `{2'b00, 4'h1}`), indicating a jump and link operation.",
+    "Reasoning": "This suggests that the architecture (across OpenRISC, RISC-V, ARM, x86) supports jump and link instructions, which are used for control flow and function calls."
+  },
+  {
+    "Net": "decode_op_alu_o",
+    "High-Level Event": "Arithmetic Logic Unit (ALU) Operation",
+    "Logical Summary": "The net `decode_op_alu_o` is set when the opcode instruction (`opc_insn`) matches specific values (`{2'b11, 4'h8}`, `{2'b10, 4'hA}`, `{2'b10, 4'h9}`, or `{2'b10, 4'hB}`), indicating an ALU operation.",
+    "Reasoning": "This suggests that the architecture (across OpenRISC, RISC-V, ARM, x86) supports various ALU operations, which are used for performing arithmetic and logical computations."
+  },
+  {
+    "Net": "decode_op_jr_o",
+    "High-Level Event": "Jump Register Operation",
+    "Logical Summary": "The net `decode_op_jr_o` is set when the opcode instruction (`opc_insn`) matches specific values (`{2'b01, 4'h1}` or `{2'b01, 4'h2}`), indicating a jump register operation.",
+    "Reasoning": "This suggests that the architecture supports a jump operation that uses a register to specify the target address."
+  },
+  {
+    "Net": "decode_imm16_o",
+    "High-Level Event": "Immediate Value Decoding",
+    "Logical Summary": "The net `decode_imm16_o` is set when the instruction is either a load/store operation (`decode_op_lsu_store_o`) or a move to special purpose register operation (`decode_op_mtspr_o`), indicating that a 16-bit immediate value needs to be decoded from the instruction.",
+    "Reasoning": "This suggests that the architecture uses immediate values in load/store and move to special purpose register instructions, which are decoded and used in the execution of these operations."
+  },
+  {
+    "Net": "imm_zext_sel",
+    "High-Level Event": "Zero-Extended Immediate Selection",
+    "Logical Summary": "The net `imm_zext_sel` is set when the instruction opcode matches specific patterns, indicating that a zero-extended immediate value should be selected for decoding.",
+    "Reasoning": "This suggests that the architecture supports zero-extended immediates for specific instructions, which are used to provide a wider range of immediate values."
+  },
+  {
+    "Net": "opc_alu",
+    "High-Level Event": "ALU Operation Decoder",
+    "Logical Summary": "The net `opc_alu` is used to decode the ALU operation based on the instruction opcode, determining the specific arithmetic or logical operation to be performed.",
+    "Reasoning": "This indicates that the architecture uses a decoder to determine the ALU operation, allowing for a variety of operations such as addition, multiplication, and shifting."
+  },
+  {
+    "Net": "decode_op_add_o",
+    "High-Level Event": "Addition Operation Detection",
+    "Logical Summary": "The net `decode_op_add_o` is activated when the instruction opcode indicates an addition operation, as determined by the combination of `opc_insn` and `opc_alu` values.",
+    "Reasoning": "This suggests that the architecture has a dedicated signal to identify addition operations, facilitating the execution of arithmetic instructions."
+  },
+  {
+    "Net": "decode_op_lsu_atomic_o",
+    "High-Level Event": "Atomic Load/Store Unit Operation Detection",
+    "Logical Summary": "The net `decode_op_lsu_atomic_o` is activated when the instruction opcode indicates an atomic load/store unit operation, specifically when `opc_insn` matches certain values and the `FEATURE_ATOMIC` is enabled.",
+    "Reasoning": "This suggests that the architecture supports atomic operations and has a dedicated signal to identify them, allowing for thread-safe access to shared resources."
+  },
+  {
+    "Net": "opc_insn",
+    "High-Level Event": "Instruction Opcode Decoding",
+    "Logical Summary": "The net `opc_insn` is related to the decoding of instruction opcodes, where it is compared to specific values to determine the type of instruction, such as load/store, multiplication, division, and others.",
+    "Reasoning": "This indicates that `opc_insn` plays a crucial role in the instruction decoding process, allowing the architecture to determine the operation to be performed based on the instruction opcode."
+  }
+]

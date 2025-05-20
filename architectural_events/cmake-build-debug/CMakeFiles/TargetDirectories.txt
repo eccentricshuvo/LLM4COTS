@@ -1,0 +1,3 @@
+/home/m588h354/projects/autophasew/openrisc/src/architectural_events/cmake-build-debug/CMakeFiles/architectural_events.dir
+/home/m588h354/projects/autophasew/openrisc/src/architectural_events/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/m588h354/projects/autophasew/openrisc/src/architectural_events/cmake-build-debug/CMakeFiles/rebuild_cache.dir

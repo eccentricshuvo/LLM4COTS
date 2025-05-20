@@ -1,0 +1,50 @@
+- Net: decode_immediate_sel_o
+- High-Level Event: Selection of immediate operand decoding mode
+- Logical Summary: This expression indicates that the decode_immediate_sel_o signal is asserted when either sign-extension (imm_sext_sel), zero-extension (imm_zext_sel), or high immediate selection (imm_high_sel) is chosen, determining how an immediate operand is decoded.
+- Reasoning: The logical expression suggests that decode_immediate_sel_o is responsible for selecting the appropriate decoding mode for immediate operands, which is a crucial step in the instruction decode stage of a processor pipeline, influencing how instructions are executed based on the operand's encoding.
+
+- Net: decode_op_branch_o
+- High-Level Event: Branch operation decoding
+- Logical Summary: The expression indicates that decode_op_branch_o is asserted when either a branch (decode_op_jbr_o), jump register (decode_op_jr_o), or jump and link (decode_op_jal_o) operation is decoded, suggesting a control flow change in the program.
+- Reasoning: The decode_op_branch_o signal is related to identifying instructions that alter the program counter, which is a fundamental aspect of controlling program flow across different architectures.
+
+- Net: decode_op_ext_o
+- High-Level Event: Extension operation decoding
+- Logical Summary: The expression indicates that decode_op_ext_o is asserted when a specific opcode (opc_insn = {2'b11, 4'h8}) and a specific ALU opcode (opc_alu = 4'hc or 4'hd) are detected, and the FEATURE_EXT is not NONE, suggesting an extension operation is being decoded.
+- Reasoning: The decode_op_ext_o signal is related to identifying instructions that require extension operations, which is a common feature across various architectures (OpenRISC, RISC-V, ARM, x86) for supporting specialized or complex instructions.
+
+- Net: decode_op_shift_o
+- High-Level Event: Shift operation decoding
+- Logical Summary: The expression indicates that decode_op_shift_o is asserted when either a specific opcode (opc_insn = {2'b11, 4'h8}) and a specific ALU opcode (opc_alu = 4'h8) are detected, or another specific opcode (opc_insn = {2'b10, 4'hE}) is detected, suggesting a shift operation is being decoded.
+- Reasoning: The decode_op_shift_o signal is related to identifying instructions that involve shift operations, a fundamental aspect of instruction sets across architectures (OpenRISC, RISC-V, ARM, x86).
+
+- Net: decode_except_syscall_o
+- High-Level Event: Exception handling for non-syscall instructions
+- Logical Summary: The expression indicates that decode_except_syscall_o is asserted when the opcode (opc_insn) matches a specific pattern ({2'b00, 4'h8}) and the instruction opcode subset (decode_insn_i[25:23]) equals 0, suggesting an exception condition for instructions that are not syscalls.
+- Reasoning: The decode_except_syscall_o signal is involved in handling exceptions for instructions that do not involve system calls, which is a critical aspect of exception handling mechanisms across various architectures (OpenRISC, RISC-V, ARM, x86).
+
+- Net: decode_op_mul_unsigned_o
+- High-Level Event: Unsigned multiplication operation decoding
+- Logical Summary: The expression indicates that decode_op_mul_unsigned_o is asserted when the opcode (opc_insn) equals a specific value ({2'b11, 4'h8}) and the ALU opcode (opc_alu) equals 0xb, suggesting a decoding event for unsigned multiplication operations.
+- Reasoning: The decode_op_mul_unsigned_o signal is involved in identifying unsigned multiplication operations, which is a fundamental aspect of arithmetic logic units across various architectures (OpenRISC, RISC-V, ARM, x86).
+
+- Net: decode_op_rfe_o
+- High-Level Event: Return from exception handling
+- Logical Summary: The expression {"lhs": "decode_op_rfe_o", "rhs": "(opc_insn EQUAL EQUAL {2'b00, 4'h9})"} indicates that decode_op_rfe_o is asserted when the opcode (opc_insn) matches a specific value ({2'b00, 4'h9}), suggesting a decoding event for return from exception handling instructions.
+- Reasoning: The decode_op_rfe_o signal is involved in identifying return from exception handling operations, which is a crucial aspect of exception handling mechanisms across various architectures (OpenRISC, RISC-V, ARM, x86).
+
+- Net: decode_op_setflag_o
+- High-Level Event: Setting flags based on instruction type
+- Logical Summary: The expression {"lhs": "decode_op_setflag_o", "rhs": "((opc_insn EQUAL EQUAL {2'b11, 4'h9}) OROR (opc_insn EQUAL EQUAL {2'b10, 4'hF}))"} indicates that decode_op_setflag_o is asserted when the opcode (opc_insn) matches specific values ({2'b11, 4'h9} or {2'b10, 4'hF}), suggesting a decoding event for instructions that set flags.
+- Reasoning: The decode_op_setflag_o signal is involved in identifying instructions that modify flags, which is a common operation across various architectures (OpenRISC, RISC-V, ARM, x86) for conditional execution and control flow management.
+
+- Net: decode_immjbr_upper_o
+- High-Level Event: Instruction decoding for jump targets
+- Logical Summary: The JSON expression {"lhs": "decode_immjbr_upper_o", "rhs": "decode_insn_i[25:16]"} suggests that decode_immjbr_upper_o is related to the decoding of immediate values, specifically the upper part of a jump target address, extracted from the instruction bits 25:16.
+- Reasoning: The decode_immjbr_upper_o signal is involved in the decoding process of instructions that specify jump targets, which is a fundamental operation across architectures (OpenRISC, RISC-V, ARM, x86) for controlling program flow.
+
+- Net: decode_op_div_o
+- High-Level Event: Division operation decoding
+- Logical Summary: The JSON expression {"lhs": "decode_op_div_o", "rhs": "(decode_op_div_signed_o OR decode_op_div_unsigned_o)"} indicates that decode_op_div_o is set when either a signed or unsigned division operation is decoded.
+- Reasoning: The decode_op_div_o signal is involved in identifying division instructions, which is a common arithmetic operation supported across various architectures (OpenRISC, RISC-V, ARM, x86).
+

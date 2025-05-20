@@ -1,0 +1,126 @@
+Net: du_addr_i
+
+High-Level Event: Instruction address calculation for data processing.
+
+Logical Summary & Reasoning: The du_addr_i signal is related to the calculation of an instruction's address for data processing. This signal is influenced by the instruction's opcode, operands, and the current program counter. The calculation of this address is crucial for the instruction's execution, as it determines where the data will be accessed or stored. From a micro-architectural perspective, this signal is trying to achieve the resolution of the instruction's memory access requirements.
+
+Test-Stimulus Guidance: To provoke this event, software engineers can craft test programs that include instructions with memory access, such as load, store, or atomic operations. The test programs should also include a variety of instruction types, such as arithmetic, logical, and control-flow instructions, to exercise the instruction address calculation logic. Additionally, the test programs can include instructions with different addressing modes, such as register indirect, immediate, or displacement addressing, to test the signal's behavior under various scenarios.
+
+Instruction Categories: The instruction categories that influence this signal include: 
+- Load and store instructions (e.g., lw, sw, lb, sb)
+- Arithmetic and logical instructions with memory access (e.g., addi, lw, sw)
+- Control-flow instructions with memory access (e.g., beq, bne)
+- Atomic operations (e.g., ll, sc)
+- Instructions with different addressing modes (e.g., register indirect, immediate, displacement addressing)
+
+Net: du_dat_i
+
+High-Level Event: Operand data is being fetched for instruction execution.
+
+Logical Summary & Reasoning: The du_dat_i signal is related to the retrieval of operand data, which is a critical step in instruction execution. This signal is influenced by the operand width, which determines the amount of data being fetched. The signal's purpose is to facilitate the transfer of operand data to the execution stage, allowing the processor to perform the required operation. The dependency on operand width suggests that this signal is sensitive to the specific requirements of the instruction being executed.
+
+Test-Stimulus Guidance: To provoke this event, software engineers can write C code that performs arithmetic or logical operations, such as addition, subtraction, multiplication, or bitwise operations, which require operand data to be fetched. Additionally, using load and store instructions can also trigger this event, as they involve retrieving data from memory. Using different data types, such as integers or floating-point numbers, can also help to exercise this signal.
+
+Instruction Categories: The types of instructions that influence this signal can be grouped into the following categories: 
+- Arithmetic instructions (e.g., add, sub, mul, div)
+- Logical instructions (e.g., and, or, xor)
+- Load and store instructions (e.g., lw, sw, lb, sb)
+- Data transfer instructions (e.g., mov, mv)
+
+Net: du_dat_o
+
+High-Level Event: Data is being output from the debug unit.
+
+Logical Summary & Reasoning: The du_dat_o signal is related to the output of data from a debug unit, which is only enabled when the debug unit feature is not set to NONE. This implies that the signal is involved in the process of debugging and is dependent on the configuration of the debug unit. From an architectural perspective, this signal is trying to achieve the transfer of data from the debug unit to other parts of the system, which is a key aspect of the debugging process.
+
+Test-Stimulus Guidance: To provoke this event, software engineers can write test programs that utilize debugging operations, such as setting breakpoints, inspecting registers, or tracing execution. Additionally, they can use instructions that interact with the debug unit, such as loading or storing data from the debug unit. The test programs should be designed to exercise the debug unit's functionality, which will trigger the output of data from the debug unit.
+
+Instruction Categories: The types of instructions that can influence this signal include debugging instructions, such as breakpoint instructions, register access instructions, and data transfer instructions. These instructions can be grouped into categories, including:
+- Debugging control instructions (e.g., setting breakpoints, enabling/disabling debugging)
+- Register access instructions (e.g., loading, storing, or inspecting registers)
+- Data transfer instructions (e.g., loading or storing data from the debug unit)
+- Tracing instructions (e.g., tracing execution, inspecting memory)
+
+Net: du_npc_write
+
+High-Level Event: Pipeline write operation to a non-program counter register is stalled due to a debug unit operation.
+
+Logical Summary & Reasoning: The signal du_npc_write is influenced by the presence of a debug unit feature in the processor. When the debug unit is enabled, the signal is dependent on the destination register of an instruction. This suggests that the signal is related to writing to a register as part of instruction execution. The fact that it is stalled due to a debug unit operation implies that the signal is involved in handling debug-related events, such as breakpoints or single-stepping, which can affect the normal flow of instruction execution.
+
+Test-Stimulus Guidance: To provoke this event, a test program can include instructions that write to non-program counter registers, such as arithmetic or load/store operations, while also enabling debug unit features like breakpoints or single-stepping. The program can then be executed with the debug unit enabled, and the signal's behavior can be observed. Additionally, the program can include instructions that trigger debug unit operations, such as executing a breakpointed instruction or accessing a memory location that triggers a watchpoint.
+
+Instruction Categories: The signal du_npc_write is influenced by instructions that write to non-program counter registers, such as:
+* Arithmetic instructions (e.g., add, subtract, multiply)
+* Load/store instructions (e.g., load word, store byte)
+* Register-transfer instructions (e.g., move, copy)
+* Debug-related instructions (e.g., breakpoint, watchpoint)
+
+Net: du_npc_written
+
+High-Level Event: Instruction completion is prevented due to an operand hazard.
+
+Logical Summary & Reasoning: The signal du_npc_written is influenced by the presence of a debug unit feature, but in this case, it is not enabled (FEATURE_DEBUGUNIT = NONE). As a result, the signal is dependent on the destination operand (dest) of an instruction. This suggests that the signal is related to the pipeline's ability to handle instructions that depend on the result of a previous instruction. When the signal is asserted, it indicates that the pipeline is unable to proceed with the execution of an instruction due to a dependency on an operand that has not yet been computed.
+
+Test-Stimulus Guidance: To provoke this event, a software engineer can write a test program that includes a sequence of instructions where the result of one instruction is used as an operand in a subsequent instruction. For example, a simple test program could include a series of arithmetic operations that depend on the result of a previous operation, such as "load A, 0; add B, A, 1; add C, B, 1". This type of sequence can trigger a pipeline stall due to an operand hazard, which would assert the du_npc_written signal.
+
+Instruction Categories: The types of instructions that influence this signal include load/store instructions, arithmetic instructions, and conditional branch instructions. These instructions can be grouped into categories such as:
+* Dependency-creating instructions (e.g., load, arithmetic operations)
+* Dependency-consuming instructions (e.g., arithmetic operations that depend on the result of a previous instruction)
+* Control-flow instructions (e.g., conditional branches that may be affected by the result of a previous instruction)
+
+Net: du_restart_from_stall
+
+High-Level Event: Pipeline restart due to debug unit stall.
+
+Logical Summary & Reasoning: The signal du_restart_from_stall is related to the restart of the pipeline after a stall caused by the debug unit. This occurs when the debug unit is enabled and a stall condition is met, requiring the pipeline to restart from the point of the stall. The logical summary of this signal is that it is dependent on the feature of the debug unit being enabled, and its purpose is to manage the pipeline's execution flow in the presence of debug-related stalls.
+
+Test-Stimulus Guidance: To provoke this event, a software engineer can write a C test program that includes a mix of instructions that trigger the debug unit, such as breakpoints or watchpoints, and instructions that cause the pipeline to stall, such as load instructions with dependencies on previous stores. The program should also include a loop or a sequence of instructions that can be restarted from the point of the stall, allowing the pipeline to restart and continue execution.
+
+Instruction Categories: The types of instructions that influence this signal can be grouped into categories such as: (1) debug-related instructions, including breakpoints, watchpoints, and step instructions; (2) load and store instructions that can cause pipeline stalls due to dependencies; and (3) control-flow instructions, such as branches and jumps, that can be affected by the restart of the pipeline.
+
+Net: du_restart_o
+
+High-Level Event: Pipeline restart due to debug unit intervention.
+
+Logical Summary & Reasoning: The signal du_restart_o is related to the debug unit's ability to intervene in the normal execution of the pipeline. When the debug unit is enabled and a specific condition is met, it can trigger a restart of the pipeline. This suggests that the signal is connected to the control logic of the pipeline and is used to handle debug-related events. The purpose of this signal is to allow the debug unit to take control of the pipeline and restart it when necessary, which is a micro-architectural role. At the architectural level, this translates to a pipeline restart event, which can be triggered by specific debug-related instructions or conditions.
+
+Test-Stimulus Guidance: To provoke this event, software engineers can use debug-related instructions or set specific flags that trigger the debug unit's intervention. This may involve using instructions that set breakpoints, single-step execution, or other debug-related operations. Additionally, specific sequences of instructions or data patterns may be used to trigger the debug unit's intervention and cause a pipeline restart.
+
+Instruction Categories: The types of instructions that can influence this signal include debug-related instructions, such as breakpoint setting, single-step execution, and other debug operations. Additionally, instructions that access specific registers or memory locations related to the debug unit may also trigger the pipeline restart event. These instruction categories can be grouped into: (1) debug instructions, (2) register access instructions, and (3) memory access instructions that interact with the debug unit.
+
+Net: du_restart_pc_o
+
+High-Level Event: Pipeline restart due to debug event.
+
+Logical Summary & Reasoning: The signal du_restart_pc_o is related to the restart of the pipeline, specifically when a debug event occurs. This signal is dependent on the presence of a debug unit feature in the processor. If the debug unit feature is enabled, the signal will be asserted, indicating that the pipeline needs to be restarted. The restart of the pipeline is a micro-architectural action that is taken to ensure that the processor's architectural state is corrected after a debug event. From an architectural perspective, this signal is related to the handling of exceptions or interrupts, where the processor needs to restart the pipeline to handle the exception or interrupt.
+
+Test-Stimulus Guidance: To provoke this event, software can use debug-related instructions or operations, such as setting breakpoints or watchpoints, to trigger a debug event. Additionally, software can use instructions that manipulate the program counter or exception handling registers to simulate a debug event. For example, a test program can set a breakpoint on a specific instruction and then execute that instruction to trigger a debug event, which would assert the du_restart_pc_o signal.
+
+Instruction Categories: The types of instructions that influence this signal can be grouped into categories such as: (1) debug-related instructions, such as setting breakpoints or watchpoints; (2) exception handling instructions, such as saving or restoring the program counter; and (3) control-flow instructions, such as jumps or branches, that can simulate a debug event. These instruction categories can be used to craft test programs that provoke the pipeline restart event.
+
+Net: du_stall_i
+
+High-Level Event: Pipeline stall due to data dependency hazard.
+
+Logical Summary & Reasoning: The du_stall_i signal is related to stalling the pipeline when there is a data dependency between instructions. This occurs when an instruction is dependent on the result of a previous instruction that has not yet been completed. The pipeline is stalled to prevent incorrect results from being generated. This is a common phenomenon in instruction-level parallelism, where the processor attempts to execute multiple instructions in a single clock cycle. The dependency chase reveals that the du_stall_i signal is influenced by the availability of operands and the completion of previous instructions.
+
+Test-Stimulus Guidance: To provoke this event, a test program can be written with a sequence of instructions that have data dependencies, such as loading a value, modifying it, and then using the modified value in a subsequent instruction. For example, a sequence like "load A, modify A, use A" can trigger a pipeline stall due to the data dependency hazard. The test program can also include instructions with varying latencies to exacerbate the data dependency and increase the likelihood of a pipeline stall.
+
+Instruction Categories: The instructions that influence this signal can be grouped into categories such as:
+- Load instructions: Instructions that load data from memory into registers.
+- Store instructions: Instructions that store data from registers into memory.
+- Arithmetic instructions: Instructions that perform arithmetic operations on register values.
+- Logical instructions: Instructions that perform logical operations on register values.
+- Control-flow instructions: Instructions that modify the program counter, such as branches and jumps.
+These categories can be combined in various ways to create test programs that provoke pipeline stalls due to data dependency hazards.
+
+Net: du_stall_o
+
+High-Level Event: Pipeline stall due to debug unit interaction.
+
+Logical Summary & Reasoning: The du_stall_o signal is related to the interaction between the processor's execution pipeline and the debug unit. When the debug unit is enabled and active, it can cause the pipeline to stall, leading to a delay in instruction execution. This signal is a result of the dependency between the debug unit's operation and the pipeline's execution, where the debug unit's activity can gate the pipeline's progress.
+
+Test-Stimulus Guidance: To provoke this pipeline stall event, a software engineer can write a test program that includes a mix of instructions that trigger debug unit activity, such as setting breakpoints or watching specific memory locations, followed by instructions that would normally execute quickly, such as simple arithmetic operations. By carefully crafting the sequence of instructions, the engineer can increase the likelihood of the pipeline stalling due to debug unit interaction.
+
+Instruction Categories: The types of instructions that influence this signal can be grouped into categories such as: (1) debug-related instructions, including those that set breakpoints, watchpoints, or trigger debug unit activity; (2) arithmetic and logical instructions that are likely to be executed quickly and may be stalled due to debug unit interaction; and (3) control-flow instructions, such as branches or jumps, that may be affected by the pipeline stall caused by the debug unit.
+

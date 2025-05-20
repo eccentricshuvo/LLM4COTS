@@ -1,0 +1,275 @@
+Net: dbus_bsel_o
+
+High-Level Event: The processor is selecting a data bus for a load or store operation, which may involve a translation lookaside buffer (TLB) reload or a data cache refill.
+
+Logical Summary & Reasoning: The dbus_bsel_o signal is controlled by the processor's state and various conditions such as store buffer write, data cache refill, and TLB reload. When the processor is in the idle state, the signal is set based on the store buffer write or data cache refill conditions. If the processor is in the read or write state, the signal is set based on the TLB reload or data cache refill conditions. The signal is also influenced by the presence of exceptions such as page faults or alignment errors. The micro-architectural role of this signal is to manage the data bus selection for load and store operations, which is essential for maintaining the correctness of the program execution. The architectural event corresponding to this signal is the selection of a data bus for a load or store operation, which may involve a TLB reload or a data cache refill.
+
+Test-Stimulus Guidance: To provoke this event, software engineers can write test programs that perform load and store operations with varying addresses, data sizes, and alignment. The test programs can also be designed to trigger TLB reloads and data cache refills by accessing large arrays or performing multiple load and store operations in a loop. Additionally, the test programs can be designed to test the handling of exceptions such as page faults and alignment errors.
+
+Instruction Categories: The instructions that influence this signal can be grouped into the following categories: 
+1. Load instructions: These instructions can trigger a TLB reload or a data cache refill, depending on the address and data size.
+2. Store instructions: These instructions can trigger a data cache refill or a store buffer write, depending on the address and data size.
+3. Memory barrier instructions: These instructions can influence the ordering of load and store operations and may trigger a TLB reload or a data cache refill.
+4. Exception-generating instructions: These instructions can trigger exceptions such as page faults or alignment errors, which can influence the dbus_bsel_o signal.
+
+Net: dbus_burst_o
+
+High-Level Event: Data cache refill burst operation initiated.
+
+Logical Summary & Reasoning: The dbus_burst_o signal is asserted when the processor is in the DC_REFILL state and the cache refill is not yet complete. This state is entered when the processor needs to refill the data cache, and the dbus_burst_o signal is used to initiate a burst operation to fetch the required data from memory. The signal is dependent on the processor's current state and the status of the cache refill operation.
+
+Test-Stimulus Guidance: To provoke this event, a software engineer can write a test program that performs a series of memory accesses that will cause the data cache to miss, triggering a cache refill operation. This can be achieved by accessing a large array or a series of non-contiguous memory locations. The test program can also include loops or recursive functions to increase the likelihood of cache misses.
+
+Instruction Categories: The instructions that can influence this signal include load and store operations, particularly those that access non-contiguous memory locations or large data structures. Examples of such instructions include:
+* Load instructions (e.g., lw, ld)
+* Store instructions (e.g., sw, sd)
+* Memory access instructions with non-contiguous addressing modes (e.g., load/store with offset or indexed addressing)
+* Instructions that access large data structures (e.g., array operations, matrix multiplication)
+
+Net: dbus_dat
+
+High-Level Event: Data bus access during load or store operations.
+
+Logical Summary & Reasoning: The dbus_dat signal is related to data transfer between the processor and main memory. It is influenced by the current state of the processor, such as idle, load, store, or cache refill. The signal is also dependent on the acknowledgement and error signals from the data bus. The processor's state machine controls the dbus_dat signal, which is used to access data from the data bus during load or store operations. The signal is also affected by the store buffer and cache refill mechanisms.
+
+Test-Stimulus Guidance: To provoke the dbus_dat signal, a software engineer can write a test program that performs load and store operations to different memory locations. The program can also include cache refill and store buffer operations to exercise the signal under different scenarios. For example, the program can perform a series of load operations followed by a store operation to a different memory location, or it can perform a cache refill operation followed by a load operation.
+
+Instruction Categories: The dbus_dat signal is influenced by the following instruction categories: 
+- Load instructions (e.g., lw, lh, lb)
+- Store instructions (e.g., sw, sh, sb)
+- Cache refill instructions (e.g., cache flush, cache invalidate)
+- Store buffer operations (e.g., store buffer write, store buffer read)
+- Memory access instructions (e.g., memory read, memory write)
+
+Net: dbus_dat_aligned
+
+High-Level Event: Data alignment operation during memory access.
+
+Logical Summary & Reasoning: The signal dbus_dat_aligned is related to the alignment of data during memory access operations. The signal is dependent on the type of memory access (load or store) and the address alignment. The processor performs data alignment to ensure that data is properly formatted for processing. This is achieved by shifting or masking the data based on the address alignment. The signal dbus_dat_aligned is a result of this alignment operation, which is crucial for maintaining data integrity during memory access.
+
+Test-Stimulus Guidance: To provoke this event, software engineers can write C test programs that perform memory access operations with misaligned addresses. For example, loading or storing data at addresses that are not 4-byte or 8-byte aligned can trigger the data alignment operation. Additionally, using loads or stores with different sizes (e.g., byte, halfword, word) can also stimulate this event.
+
+Instruction Categories: The types of instructions that influence this signal can be grouped into categories such as:
+* Load instructions (e.g., lw, lh, lb)
+* Store instructions (e.g., sw, sh, sb)
+* Memory access instructions with misaligned addresses
+* Instructions that perform data transfer between registers and memory (e.g., load/store multiple, load/store doubleword)
+
+Net: dbus_dat_extended
+
+High-Level Event: Data extension during load operation.
+
+Logical Summary & Reasoning: The dbus_dat_extended signal is related to the extension of data during a load operation. This signal is influenced by the control signals lsu_zext_i and lsu_length_i, which determine the type of extension to be performed. The extension can be either zero extension, sign extension, or no extension, depending on the values of these control signals. The signal is also dependent on the aligned data from the dbus_dat_aligned signal. The purpose of this signal is to ensure that the data is properly aligned and extended before it is used by the processor.
+
+Test-Stimulus Guidance: To provoke this event, software can use load instructions with different data sizes and alignments. For example, loading a byte from an unaligned address can trigger the sign extension or zero extension of the data. Additionally, using load instructions with different lengths, such as loading a halfword or a word, can also trigger the extension of the data.
+
+Instruction Categories: The instructions that can influence this signal include load instructions, such as lb, lh, lw, ldb, ldh, and ldw, which load data from memory into a register. The type of extension performed depends on the instruction and the data size. For example, lb and lh instructions perform sign extension, while lw instructions perform no extension. The ldb and ldh instructions perform zero extension, while the ldw instruction performs no extension.
+
+Net: dbus_dat_i
+
+High-Level Event: Pipeline stall on data dependency hazard due to incomplete data from a previous load operation.
+
+Logical Summary & Reasoning: The dbus_dat_i signal is related to the data input from a load operation. When this signal is not ready or is incomplete, it can cause a pipeline stall. This is because the processor is waiting for the data to be available before it can proceed with the next instruction. The signal's purpose is to indicate that the data is ready to be used by the processor, and its absence or incompleteness can cause a delay in the pipeline. This delay is a result of the processor's dependency on the data, and it is a common phenomenon in instruction-level parallelism.
+
+Test-Stimulus Guidance: To provoke this event, a software engineer can write a test program that includes a load operation followed by an instruction that depends on the loaded data. For example, a load instruction can be followed by an arithmetic instruction that uses the loaded data as an operand. If the load operation takes longer than expected to complete, the pipeline will stall, causing a delay in the execution of the subsequent instruction. The test program can be designed to exercise this scenario by using a combination of load and dependent instructions, such as load-word, load-byte, add, multiply, etc.
+
+Instruction Categories: The instructions that influence this signal can be grouped into the following categories: 
+- Load instructions (e.g., load-word, load-byte, load-halfword)
+- Instructions that depend on the result of a load operation (e.g., add, subtract, multiply, divide)
+- Instructions that use the loaded data as an operand (e.g., arithmetic, logical, comparison instructions)
+
+Net: dbus_dat_o
+
+High-Level Event: Data is being transferred from the load/store unit to the data bus.
+
+Logical Summary & Reasoning: The dbus_dat_o signal is controlled by the load/store unit's state machine, which determines when data is transferred from the unit to the data bus. The state machine has several states, including idle, read, write, and DC refill. Depending on the current state and the input signals, the state machine decides whether to transfer data from the load/store unit to the data bus. The signal is influenced by the load/store unit's operation, such as reading or writing data, and the acknowledgement or error signals from the data bus.
+
+Test-Stimulus Guidance: To provoke this signal, software can execute load or store instructions that access memory locations, causing the load/store unit to transfer data to the data bus. The signal can also be influenced by the execution of instructions that cause the load/store unit to enter different states, such as read or write operations. Additionally, the signal can be affected by the acknowledgement or error signals from the data bus, which can be triggered by certain instructions or memory access patterns.
+
+Instruction Categories: The signal is influenced by the following categories of instructions: 
+- Load instructions (e.g., lw, lh, lb) that transfer data from memory to registers
+- Store instructions (e.g., sw, sh, sb) that transfer data from registers to memory
+- Instructions that cause the load/store unit to enter different states, such as read or write operations (e.g., lr, sc)
+- Instructions that access memory locations that are not in the cache, causing a DC refill operation.
+
+Net: dbus_err
+
+High-Level Event: A data bus error occurred during an instruction execution, resulting in an exception.
+
+Logical Summary & Reasoning: The dbus_err signal is asserted when a data bus error occurs, which can happen during load or store instructions. This error can be caused by various factors such as invalid memory addresses, bus contention, or hardware faults. The signal is gated by the reset signal, indicating that it is only relevant when the system is not in reset state. The dependency on the reset signal suggests that the error detection mechanism is only active when the system is operational. From a micro-architectural perspective, this signal is related to the load/store unit, which is responsible for handling data transfers between the processor and memory. The assertion of this signal indicates that an exception needs to be handled, which will likely involve interrupting the normal instruction execution flow and transferring control to an exception handler.
+
+Test-Stimulus Guidance: To provoke a data bus error, software can attempt to access memory locations that are invalid, out-of-bounds, or protected. This can be achieved by writing C code that performs loads or stores to specific memory addresses, such as uninitialized or null pointers, or by using pointer arithmetic to access memory locations that are not mapped or are restricted. Additionally, software can also attempt to access memory locations that are not aligned properly, which can also trigger a data bus error.
+
+Instruction Categories: The instruction categories that can influence the dbus_err signal include load instructions (e.g., lw, ld), store instructions (e.g., sw, sd), and instructions that perform memory accesses (e.g., load-linked, store-conditional). These instructions can be further categorized into those that access valid memory locations and those that access invalid or restricted memory locations. The specific instructions that can trigger a data bus error will depend on the ISA and the memory management unit (MMU) configuration.
+
+Net: dbus_req_o
+
+High-Level Event: A memory access request is generated due to a load or store operation.
+
+Logical Summary & Reasoning: The dbus_req_o signal is asserted when the processor is in a state where it needs to access memory, such as during a load or store operation. The signal is controlled by various conditions, including the processor state, the type of operation being performed, and the status of the memory access. The signal is also influenced by the presence of exceptions, such as page faults or alignment errors. The assertion of this signal indicates that the processor is requesting access to memory, which can lead to a stall in the pipeline if the memory access cannot be completed immediately.
+
+Test-Stimulus Guidance: To provoke this event, software can execute a sequence of load and store operations that access different memory locations, with varying sizes and alignments. Additionally, software can intentionally induce exceptions, such as page faults or alignment errors, to observe the behavior of the dbus_req_o signal. The test stimulus should also consider the impact of different processor states, such as idle, refill, or write, on the assertion of the dbus_req_o signal.
+
+Instruction Categories: The instructions that influence the dbus_req_o signal can be grouped into the following categories: 
+1. Load instructions (e.g., lw, lh, lb) that access memory locations.
+2. Store instructions (e.g., sw, sh, sb) that write data to memory locations.
+3. Instructions that induce exceptions, such as page faults or alignment errors (e.g., accessing an unmapped memory location).
+4. Instructions that affect the processor state, such as idle, refill, or write (e.g., nop, fence).
+
+Net: dbus_stall
+
+High-Level Event: Pipeline stall due to data bus exceptions or memory management unit (MMU) faults.
+
+Logical Summary & Reasoning: The dbus_stall signal is triggered by various exceptions related to data bus operations, including alignment errors, data bus errors, page faults, and translation lookaside buffer (TLB) misses. These exceptions can occur during load or store operations, and the signal is used to stall the pipeline until the exception is handled. The signal is also influenced by the MMU enable status and the state of the TLB reload.
+
+Test-Stimulus Guidance: To provoke this event, software can execute instructions that access memory locations that are not aligned, or that are not mapped in the MMU. Additionally, software can execute instructions that trigger page faults or TLB misses. For example, a C program can be written to access an array with a misaligned pointer, or to access a memory location that is not mapped in the MMU.
+
+Instruction Categories: The instructions that can influence the dbus_stall signal include:
+* Load and store instructions (e.g., lw, sw) that access memory locations
+* Instructions that trigger page faults or TLB misses (e.g., accessing a memory location that is not mapped in the MMU)
+* Instructions that perform unaligned memory accesses (e.g., accessing a memory location that is not aligned to a word boundary)
+* Instructions that manipulate the MMU or TLB (e.g., setting or clearing MMU or TLB registers)
+
+Net: dbus_we
+
+High-Level Event: Memory write operation initiated by the processor.
+
+Logical Summary & Reasoning: The dbus_we signal is related to the processor's load/store unit and is asserted when a memory write operation is initiated. The signal is dependent on the current state of the processor, the type of operation being performed, and the availability of data to be written. The signal is also influenced by error conditions such as bus errors or page faults. The processor's state machine transitions through various states, including idle, read, write, and refill, and the dbus_we signal is asserted during the write state. The signal is also dependent on the store buffer being not empty and the last write operation being completed.
+
+Test-Stimulus Guidance: To provoke the dbus_we signal, software can use a combination of load and store instructions, with a focus on store operations that write data to memory. The test stimulus can include a sequence of store instructions with varying data sizes and alignments to exercise the load/store unit and the memory interface. Additionally, the test can include error injection mechanisms to simulate bus errors or page faults and observe the processor's behavior.
+
+Instruction Categories: The instructions that influence the dbus_we signal can be grouped into the following categories:
+* Store instructions (e.g., store word, store byte, store halfword)
+* Load instructions (e.g., load word, load byte, load halfword)
+* Memory management instructions (e.g., cache flush, cache invalidate)
+* Error handling instructions (e.g., exception handling, interrupt handling)
+These instruction categories can be used to create test programs that exercise the dbus_we signal and the associated load/store unit and memory interface.
+
+Net: dc_access
+
+High-Level Event: Data cache access enabled for an instruction.
+
+Logical Summary & Reasoning: The dc_access signal is controlled by the presence of a data cache feature in the processor. When the data cache is enabled, the signal is asserted, indicating that the current instruction can access the data cache. This signal is relevant in the context of instruction execution, where the processor needs to determine whether to access the data cache for load or store operations. The signal's purpose is to facilitate the processor's ability to manage data cache accesses, which is a critical aspect of instruction-level parallelism and performance optimization.
+
+Test-Stimulus Guidance: To provoke the dc_access signal, software engineers can write C test programs that perform load and store operations on variables, using a mix of cacheable and non-cacheable memory regions. By strategically placing these operations within loops or conditional statements, the test program can exercise the data cache access logic and trigger the dc_access signal. Additionally, using compiler directives or pragmas to control cache behavior can help to further isolate and test the dc_access signal.
+
+Instruction Categories: The dc_access signal is influenced by instructions that access memory, such as loads (e.g., LW, LB, LH), stores (e.g., SW, SB, SH), and atomic operations (e.g., LL, SC). These instructions can be grouped into categories based on their memory access patterns, such as:
+* Load instructions: LW, LB, LH, etc.
+* Store instructions: SW, SB, SH, etc.
+* Atomic operations: LL, SC, etc.
+* Memory barrier instructions: SYNC, ESYNC, etc.
+These categories can help software engineers to craft targeted test programs that exercise the dc_access signal and verify its behavior under various scenarios.
+
+Net: dc_ack
+
+High-Level Event: Pipeline stall due to data cache access.
+
+Logical Summary & Reasoning: The dc_ack signal is related to the data cache access. When the data cache feature is enabled, the signal is dependent on the destination of the cache access. This implies that the signal is trying to achieve a data cache hit or miss detection, which is a micro-architectural role. From an architectural perspective, this translates to a pipeline stall due to a data cache access, where the processor is waiting for the data to be retrieved from the cache.
+
+Test-Stimulus Guidance: To provoke this event, software can use C code that performs memory accesses with a mix of cache hits and misses. This can be achieved by accessing arrays or structures with a size larger than the cache line size, or by using pointers to access memory locations that are not contiguous. Additionally, using operations that involve loading and storing data to memory, such as memcpy or memset, can also trigger this event.
+
+Instruction Categories: The types of instructions that influence this signal can be grouped into categories such as:
+- Load instructions (e.g., lw, ld)
+- Store instructions (e.g., sw, sd)
+- Memory access instructions (e.g., memcpy, memset)
+- Instructions that involve cache-sensitive data structures (e.g., arrays, linked lists)
+
+Net: dc_adr
+
+High-Level Event: The processor generates a memory access address for a load or store operation.
+
+Logical Summary & Reasoning: The dc_adr signal is dependent on the type of operation being executed, specifically load or store operations. The address is generated based on the result of an arithmetic operation, which involves the addition of two operands, potentially with carry or subtraction. The address can also be influenced by control signals that indicate the operation type and whether the address should be calculated or taken from a register. The first pipeline stage where this signal can influence architectural state is the execution stage, where the address is generated and used to access memory.
+
+Test-Stimulus Guidance: To provoke this event, software can use a combination of load and store instructions with varying address modes, such as register indirect, immediate offset, or indexed addressing. Additionally, using arithmetic instructions that involve carry or subtraction can also influence the address generation. For example, a test program can use a sequence of instructions like "load register, offset(reg)", "store reg, offset(reg)", or "add reg, reg, immediate" to exercise the address generation logic.
+
+Instruction Categories: The relevant instruction categories that influence this signal include:
+- Load instructions (e.g., load register, load immediate)
+- Store instructions (e.g., store register, store immediate)
+- Arithmetic instructions (e.g., add, subtract, add with carry)
+- Control instructions (e.g., branch, jump)
+- Addressing mode instructions (e.g., register indirect, immediate offset, indexed addressing)
+
+Net: dc_bsel
+
+High-Level Event: Data cache access selection based on system configuration.
+
+Logical Summary & Reasoning: The dc_bsel signal is influenced by the system's data cache configuration. When the data cache feature is enabled, the signal is controlled by the destination register, indicating that the data cache access is selected based on the destination of the instruction. In the absence of a data cache, the signal is set to a default value, implying that data cache access is not applicable. This suggests that the signal plays a role in managing data cache operations, which is a critical aspect of the system's memory hierarchy.
+
+Test-Stimulus Guidance: To provoke this event, software can execute instructions that access memory locations, such as load and store operations, while varying the system's data cache configuration. For example, a test program can be written to execute a series of load instructions with different addresses, while toggling the data cache enable/disable feature between iterations. This would allow the software to observe the impact of the data cache configuration on the system's behavior.
+
+Instruction Categories: The instructions that influence this signal can be grouped into the following categories: 
+- Memory access instructions (e.g., load, store)
+- Instructions that modify system configuration registers (e.g., enabling/disabling data cache)
+- Instructions that affect the destination register (e.g., arithmetic, logical operations)
+
+Net: dc_enabled
+
+High-Level Event: Pipeline stall due to data cache access.
+
+Logical Summary & Reasoning: The dc_enabled signal is influenced by the processor's ability to access the data cache. When the data cache is enabled, the processor can access the cache without stalling the pipeline. However, if the data cache is not enabled or if there is a request to refill the cache, the pipeline may stall. This signal is related to the processor's load/store unit and is affected by the availability of data in the cache. The signal is also dependent on the reset state of the processor and the current cache refill status.
+
+Test-Stimulus Guidance: To trigger a pipeline stall due to data cache access, a software engineer can write a test program that performs a series of load operations with non-sequential addresses, causing the processor to access different locations in the data cache. This can be achieved by using a loop that loads data from an array with a large stride, or by using a pointer to access data in a non-contiguous block of memory. Additionally, the test program can be designed to perform a mix of load and store operations to further stress the data cache and increase the likelihood of a pipeline stall.
+
+Instruction Categories: The types of instructions that influence the dc_enabled signal can be grouped into the following categories: 
+- Load instructions (e.g., lw, ld, ldr)
+- Store instructions (e.g., sw, st, str)
+- Instructions that access memory with non-sequential addresses (e.g., pointer arithmetic, array indexing)
+- Instructions that perform cache-sensitive operations (e.g., cache flush, cache invalidate)
+
+Net: dc_err
+
+High-Level Event: Data cache error occurred during a memory access operation.
+
+Logical Summary & Reasoning: The dc_err signal is related to the data cache functionality. When the data cache feature is enabled, this signal is asserted when an error occurs during a memory access operation, such as a cache miss or a data corruption. The signal is dependent on the state of the data cache feature, which is a configuration option that determines whether the data cache is enabled or disabled. The micro-architectural role of this signal is to indicate a data cache error, which can impact the correctness of the program execution. From an architectural perspective, this signal represents a cache error event that can be handled by the software.
+
+Test-Stimulus Guidance: To provoke a data cache error, software can perform a series of memory access operations, such as loading and storing data to a specific memory location, and then checking the data integrity. The software can also intentionally introduce data corruption or cache misses to trigger the dc_err signal. Additionally, the software can use cache manipulation instructions, such as cache flush or invalidate, to control the cache state and induce a cache error.
+
+Instruction Categories: The instruction categories that influence the dc_err signal include: (1) memory access instructions, such as load and store instructions, (2) cache manipulation instructions, such as cache flush and invalidate, and (3) data processing instructions that access memory, such as load-op instructions. These instruction categories can be grouped into categories that influence the data cache state and can potentially trigger a data cache error.
+
+Net: dc_hit_o
+
+High-Level Event: Cache hit detected in the data cache.
+
+Logical Summary & Reasoning: The dc_hit_o signal is related to the data cache and is asserted when a cache hit occurs, indicating that the requested data is present in the cache. This signal is influenced by the presence of a data cache in the system, and its assertion is dependent on the cache configuration. The signal's purpose is to notify the processor that the requested data can be retrieved from the cache, rather than requiring a main memory access. This event is a result of the processor's memory access operations, where the cache is checked for the presence of the requested data before accessing main memory.
+
+Test-Stimulus Guidance: To provoke a cache hit, software can use a sequence of memory access operations where the same memory location is accessed repeatedly, allowing the cache to store the data and subsequent accesses to result in a cache hit. This can be achieved through C code using loops that access the same memory location, or by using memory-intensive operations that access a small set of memory locations repeatedly.
+
+Instruction Categories: The dc_hit_o signal is influenced by instructions that access memory, such as load and store instructions. These instructions can be grouped into categories including: (1) memory load instructions (e.g., lw, ld), (2) memory store instructions (e.g., sw, sd), and (3) memory-intensive operations (e.g., loops that access a small set of memory locations).
+
+Net: dc_ldat
+
+High-Level Event: Data cache load operation completion.
+
+Logical Summary & Reasoning: The dc_ldat signal is related to the completion of a load operation from the data cache. When the data cache feature is enabled, the signal is asserted based on the destination of the load operation. This suggests that the signal is trying to indicate the completion of a data cache access, which is a critical event in the processor's instruction execution pipeline. From a micro-architectural perspective, this signal is likely used to control the flow of data and instructions through the pipeline, ensuring that the processor can execute instructions correctly and efficiently.
+
+Test-Stimulus Guidance: To provoke this event, software engineers can write C test programs that perform load operations from memory, such as reading from an array or a global variable. The test program can also include instructions that depend on the loaded data, such as arithmetic operations or conditional statements, to verify that the load operation completes correctly and the data is available for use.
+
+Instruction Categories: The types of instructions that influence this signal include load instructions (e.g., lw, ld), store instructions (e.g., sw, sd), and instructions that access memory (e.g., mov, add with a memory operand). These instructions can be grouped into categories such as data transfer instructions, memory access instructions, and instructions that depend on loaded data.
+
+Net: dc_refill
+
+High-Level Event: Pipeline stall due to data cache refill.
+
+Logical Summary & Reasoning: The dc_refill signal is related to the data cache refill mechanism. When the data cache is enabled and a cache miss occurs, the pipeline stalls to allow for the cache refill operation. This signal is influenced by the presence of a data cache and the occurrence of a cache miss. The pipeline stall is a result of the processor waiting for the cache refill to complete before continuing execution.
+
+Test-Stimulus Guidance: To provoke this event, a software engineer can write a C test program that performs a series of memory accesses with a high likelihood of causing cache misses. This can be achieved by accessing large arrays or pointers with a stride that exceeds the cache line size. Additionally, the program can be designed to perform a mix of load and store operations to increase the likelihood of cache misses.
+
+Instruction Categories: The types of instructions that influence this signal can be grouped into categories such as:
+- Load instructions (e.g., lw, ld) that access memory locations
+- Store instructions (e.g., sw, sd) that modify memory locations
+- Instructions that access large data structures (e.g., arrays, linked lists) that may exceed the cache size
+- Instructions that perform indirect memory accesses (e.g., pointer arithmetic) that may lead to cache misses.
+
+Net: dc_refill_allowed
+
+High-Level Event: Cache refill is allowed when there is no store operation, no snoop hit, and no snoop valid.
+
+Logical Summary & Reasoning: The signal dc_refill_allowed is generated based on several conditions. It checks if there is no store operation (mor1kx_cpu_cappuccino_ctrl_op_lsu_store_i is false and the current state is not a write state), no snoop hit (mor1kx_cpu_cappuccino_dc_snoop_hit is false), and no snoop valid (mor1kx_cpu_cappuccino_snoop_valid is false). This suggests that the signal is trying to prevent cache refills during certain operations or when the cache is being accessed by other agents. The micro-architectural role of this signal is to control the cache refill mechanism, ensuring that it only occurs when it is safe to do so. At the architectural level, this translates to a cache refill event that occurs when the cache is not busy with other operations.
+
+Test-Stimulus Guidance: To provoke this event, software can execute a sequence of instructions that do not involve store operations, and ensure that the cache is not being accessed by other agents. This can be achieved by executing a series of load instructions, followed by a cache refill operation. Additionally, the software can manipulate the snoop hit and snoop valid signals to test the behavior of the dc_refill_allowed signal under different conditions.
+
+Instruction Categories: The types of instructions that influence this signal include load and store instructions, as well as cache management instructions such as cache refill and cache invalidate. The signal is also affected by the current state of the processor, including the state of the cache and the presence of snoop hits or snoop valid signals. The relevant instruction categories can be grouped into the following: 
+1. Load instructions: These instructions can trigger a cache refill if the requested data is not present in the cache.
+2. Store instructions: These instructions can prevent a cache refill from occurring if they are currently being executed.
+3. Cache management instructions: These instructions can directly manipulate the cache and trigger a cache refill or invalidate the cache.
+

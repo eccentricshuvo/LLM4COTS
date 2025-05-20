@@ -1,0 +1,55 @@
+- Net: decode_except_illegal_o
+- High-Level Event: Detection of an illegal instruction exception
+- Logical Summary: This net signifies that an exception occurs when an illegal instruction is encountered during the decode stage, potentially due to an invalid opcode, an undefined instruction, or an instruction that is not supported by the current architecture mode.
+- Reasoning: The generation of the `decode_except_illegal_o` signal suggests that the decoder has identified an instruction that does not conform to the expected format or is not valid in the current execution context, triggering an exception handling mechanism to manage the error.
+
+- Net: decode_adder_do_carry_o
+- High-Level Event: Addition with carry instruction decoding
+- Logical Summary: This net is related to the decoding of an instruction that involves an addition operation with a carry, indicating that the instruction set architecture (ISA) supports arithmetic operations that can generate or utilize a carry flag.
+- Reasoning: The presence of `decode_adder_do_carry_o` suggests that the processor architecture (OpenRISC, RISC-V, ARM, x86) supports instructions that can perform addition with carry, which is a fundamental arithmetic operation used in various computational tasks.
+
+- Net: decode_adder_do_sub_o
+- High-Level Event: Subtraction instruction decoding
+- Logical Summary: This net is related to the decoding of an instruction that involves a subtraction operation, indicating that the instruction set architecture (ISA) supports arithmetic operations that can perform subtractions.
+- Reasoning: The presence of `decode_adder_do_sub_o` suggests that the processor architecture (OpenRISC, RISC-V, ARM, x86) supports instructions that can perform subtraction, which is a fundamental arithmetic operation used in various computational tasks.
+
+- Net: decode_op_mfspr_o
+- High-Level Event: Move from Special Purpose Register instruction decoding
+- Logical Summary: This net is related to the decoding of an instruction that moves data from a special purpose register, indicating that the instruction set architecture (ISA) supports the movement of data between special purpose registers and other registers.
+- Reasoning: The presence of `decode_op_mfspr_o` suggests that the processor architecture (OpenRISC, RISC-V, ARM, x86) supports instructions that can move data from special purpose registers, which is a common operation used to access and manipulate system control registers, status registers, or other specialized registers.
+
+- Net: decode_immediate_o
+- High-Level Event: Immediate instruction decoding
+- Logical Summary: This net is related to the decoding of an instruction that contains an immediate value, indicating that the instruction set architecture (ISA) supports instructions with embedded constant values.
+- Reasoning: The presence of `decode_immediate_o` suggests that the processor architecture (OpenRISC, RISC-V, ARM, x86) supports instructions with immediate operands, which are used to perform operations with constant values, such as load immediate, add immediate, or compare immediate.
+
+- Net: decode_op_bf_o
+- High-Level Event: Branch instruction decoding
+- Logical Summary: This net is related to the decoding of a branch instruction, specifically when the opcode (opc_insn) matches a certain value ({2'b00, 4'h4}), indicating a conditional branch operation.
+- Reasoning: The decoding of `decode_op_bf_o` implies that the architecture supports conditional branch instructions, which are used to alter the control flow based on certain conditions, and this specific decoding is triggered by a particular opcode.
+
+- Net: decode_op_mul_signed_o
+- High-Level Event: Signed multiplication instruction decoding
+- Logical Summary: This net is related to the decoding of a signed multiplication instruction, which is triggered when the opcode (opc_insn) matches specific values ({2'b11, 4'h8} or {2'b10, 4'hC}) and the ALU opcode (opc_alu) equals 4'h6.
+- Reasoning: The decoding of `decode_op_mul_signed_o` indicates that the architecture supports signed multiplication instructions, which are used for arithmetic operations.
+
+- Net: decode_op_mtspr_o
+- High-Level Event: Move to Special Purpose Register instruction decoding
+- Logical Summary: This net is set when the opcode (opc_insn) equals a specific value ({2'b11, 4'h0}), indicating a Move to Special Purpose Register (MTSPR) instruction.
+- Reasoning: The decoding of `decode_op_mtspr_o` signifies that the processor supports MTSPR instructions, which are used to transfer data between general-purpose registers and special-purpose registers.
+
+- Net: decode_op_bnf_o
+- High-Level Event: Branch if Not Equal Flag instruction decoding
+- Logical Summary: This net is set when the opcode (opc_insn) equals a specific value ({2'b00, 4'h3}), indicating a Branch if Not Equal Flag (BNF) instruction.
+- Reasoning: The decoding of `decode_op_bnf_o` signifies that the processor supports conditional branch instructions based on flag conditions.
+
+- Net: decode_op_msync_o
+- High-Level Event: Memory Synchronization instruction decoding
+- Logical Summary: This net is set when the FEATURE_MSYNC is not NONE, the opcode (opc_insn) equals a specific value ({2'b00, 4'h8}), and the instruction opcode decode_insn_i[25:23] equals 3'h4, indicating a Memory Synchronization (MSYNC) instruction.
+- Reasoning: The decoding of `decode_op_msync_o` signifies that the processor supports memory synchronization instructions, which are used to ensure data coherence across the system.
+
+- Net: decode_op_mul_o
+- High-Level Event: Multiplication instruction decoding
+- Logical Summary: This net is set when either a signed or unsigned multiplication operation is decoded, as indicated by the logical OR operation between `decode_op_mul_signed_o` and `decode_op_mul_unsigned_o`.
+- Reasoning: The decoding of `decode_op_mul_o` signifies that the processor has encountered a multiplication instruction, which can be either signed or unsigned, and is preparing to execute the corresponding operation.
+

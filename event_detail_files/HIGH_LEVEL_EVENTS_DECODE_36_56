@@ -1,0 +1,7 @@
+- Net: decode_op_lsu_store_o
+- High-Level Event: Initiation of a load/store operation
+- Logical Summary: This expression signifies that a load/store operation is initiated when the opcode (opc_insn) matches specific values related to store instructions, including atomic operations if the FEATURE_ATOMIC is not NONE. The specific matches include:
+    - Opcode values {2'b11, 4'h5}, {2'b11, 4'h6}, and {2'b11, 4'h7} which correspond to store instructions.
+    - Opcode value {2'b11, 4'h3} when FEATURE_ATOMIC is not NONE, indicating an atomic store operation.
+- Reasoning: The decode_op_lsu_store_o net is set based on the opcode (opc_insn) and the presence of atomic feature support, indicating the start of a load/store operation. This is consistent with the role of the decode stage in a CPU pipeline, where instructions are decoded and prepared for execution, including load and store operations.
+

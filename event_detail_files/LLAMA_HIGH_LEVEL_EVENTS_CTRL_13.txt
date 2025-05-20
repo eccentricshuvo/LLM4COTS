@@ -1,0 +1,15 @@
+Net: ctrl_flag_clear
+
+High-Level Event: The processor clears a flag after executing an instruction.
+
+Logical Summary & Reasoning: The ctrl_flag_clear signal is asserted when the processor needs to clear a flag after executing an instruction. This can occur when the result of an arithmetic or comparison operation does not set the flag, or when a specific instruction is executed that clears the flag. The signal is influenced by various factors, including the type of instruction being executed, the operands, and the result of the operation. The processor's control logic evaluates these factors to determine whether the flag should be cleared.
+
+Test-Stimulus Guidance: To provoke the ctrl_flag_clear signal, software can execute instructions that perform arithmetic or comparison operations and verify that the flag is cleared when the result does not set the flag. For example, executing a comparison instruction with operands that are equal can clear the flag. Additionally, executing specific instructions that clear the flag, such as a clear flag instruction, can also provoke the signal.
+
+Instruction Categories: The instructions that influence the ctrl_flag_clear signal can be grouped into the following categories:
+* Arithmetic instructions (e.g., add, subtract, multiply)
+* Comparison instructions (e.g., equal, not equal, less than, greater than)
+* Flag-clearing instructions (e.g., clear flag)
+* Logical instructions (e.g., and, or, not)
+These instruction categories can be used to craft test programs that exercise the ctrl_flag_clear signal and verify its behavior.
+

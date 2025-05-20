@@ -1,0 +1,62 @@
+[
+  {
+    "Net": "branch_mispredict_i",
+    "High-Level Event": "Branch misprediction detected.",
+    "Logical Summary": "The net `branch_mispredict_i` indicates a branch misprediction when it is asserted, leading to the instruction fetch pipeline needing to correct its course. This directly interacts with the `padv_execute_o` signal, which indicates the advancement of execution and triggers the updating of the `last_branch_target_pc` based on the `execute_mispredict_target_i`.",
+    "Reasoning": "The JSON condition highlights that a branch misprediction is recognized when both `padv_execute_o` and `branch_mispredict_i` are true, signaling the system to update the program counter to the mispredicted target, thus indicating a necessary correction in the instruction flow."
+  },
+  {
+    "Net": "checking",
+    "High-Level Event": "Status check for special register access.",
+    "Logical Summary": "The net `checking` indicates the status of access to a special register (SPR), which occurs when `spr_we` is active alongside specific access conditions. It interacts with `spr_access` to determine if the correct permissions are met for access, and also depends on `spr_sr` and `padv_ctrl` to ensure valid access paths.",
+    "Reasoning": "The logical expression specifies that `checking` is asserted when the write enable signal for the SPR is active, combined with the valid access conditions, indicating a current operation for accessing or modifying a special register. This highlights the necessity for permission checks in the CPU's operation to maintain data integrity."
+  },
+  {
+    "Net": "cpu_stall",
+    "High-Level Event": "Indication of pipeline stall condition.",
+    "Logical Summary": "The `cpu_stall` net reflects a stall in the CPU pipeline triggered by various conditions, including decode or execution bubbles, exceptions, or control signals. It interacts with several control signals such as `du_stall_i`, `padv_ctrl`, and the fetch stage's validity to determine when to halt operations and maintain data coherence in the pipeline.",
+    "Reasoning": "The JSON expressions show that `cpu_stall` is set based on conditions like decode execution halts, exceptions, or control operations, which are crucial for ensuring the CPU does not proceed with invalid instructions or data, thereby maintaining the integrity of ongoing operations within the pipeline."
+  },
+  {
+    "Net": "ctrl_alu_result_i[31:0]",
+    "High-Level Event": "ALU operation result output for subsequent processing.",
+    "Logical Summary": "The `ctrl_alu_result_i[31:0]` net conveys the result of arithmetic and logical operations executed by the ALU, which is then utilized by the control unit and various data paths for further processing or writing back to registers. Its value is derived from inputs such as operand signals and operation codes, and it interacts with the register file and memory access stages.",
+    "Reasoning": "The JSON indicates that `ctrl_alu_result_i[31:0]` is updated based on specific ALU operations, signifying that it represents the outcome of computations which are essential for the next steps in the instruction execution cycle, including data writes and branching decisions."
+  },
+  {
+    "Net": "ctrl_branch_except_pc_o[31:0]",
+    "High-Level Event": "Branch exception handling via program counter update.",
+    "Logical Summary": "The `ctrl_branch_except_pc_o[31:0]` net indicates the program counter (PC) value to which control will transfer in the event of a branch exception. This net is influenced by branch condition signals and exception flags, and it interacts with the PC update logic and the instruction fetch stage to direct execution flow appropriately.",
+    "Reasoning": "The JSON specifies conditions under which the PC is set to a new value in response to branch exceptions, indicating that this net is crucial for managing control flow alterations during execution, particularly in contexts where exception handling is required, thereby ensuring that the correct instruction sequence is followed."
+  },
+  {
+    "Net": "ctrl_branch_exception_o",
+    "High-Level Event": "Triggering of a branch exception.",
+    "Logical Summary": "This net indicates that a branch exception is asserted when either an existing exception (`exception_r`), a request for return from exception (`ctrl_op_rfe_i`), or a state indicating that a return from exception operation is ongoing (`doing_rfe`) is true, provided that the exception has not yet been taken (`exception_taken` is false).",
+    "Reasoning": "The logical expression in the JSON outlines the conditions that lead to the assertion of a branch exception, highlighting the importance of monitoring current exception status and control operations to ensure that appropriate handling occurs when a branch exception is warranted."
+  },
+  {
+    "Net": "ctrl_bubble_o",
+    "High-Level Event": "Control bubble generation in the pipeline.",
+    "Logical Summary": "The `ctrl_bubble_o` net reflects a control bubble in the pipeline, which is activated either when the `padv_execute_o` signal is high on a clock edge or when a reset (`rst`) is asserted, setting it to 0. This indicates that the pipeline is temporarily stalled, allowing for correct instruction alignment and handling of hazards.",
+    "Reasoning": "The updates to `ctrl_bubble_o` based on the `padv_execute_o` and `rst` conditions demonstrate its role in managing pipeline flow, ensuring that operations proceed correctly, particularly in situations where execution conditions necessitate a bubble to maintain data integrity and control flow."
+  },
+  {
+    "Net": "ctrl_carry_clear_i",
+    "High-Level Event": "Carry flag clear signal assertion.",
+    "Logical Summary": "The `ctrl_carry_clear_i` net interacts with the carry flag mechanism, indicating a condition under which the carry flag should be cleared. It works in conjunction with the state of the `ctrl_carry_set_i` and the evaluation of the carry flag condition (`FEATURE_CARRY_FLAG`), affecting subsequent arithmetic operations in the datapath.",
+    "Reasoning": "The logical expression for `ctrl_carry_clear_i` indicates that it is asserted to clear the carry flag when specific conditions about the carry flag state and the control signals are met, thereby influencing the arithmetic operations that follow in the pipeline."
+  },
+  {
+    "Net": "ctrl_carry_o",
+    "High-Level Event": "Carry flag signal generation for arithmetic operations.",
+    "Logical Summary": "The `ctrl_carry_o` net is asserted when the carry flag is not equal to NONE and either the carry clear signal is not asserted while the status register indicates a specific state, or the carry set signal is active. This net affects the execution of arithmetic operations by signaling the presence of a carry condition.",
+    "Reasoning": "The logical expression shows that `ctrl_carry_o` is generated based on the status of the carry flag and the control inputs, which are essential for determining whether the carry condition should be propagated in subsequent arithmetic operations, thus ensuring correct operation in the datapath."
+  },
+  {
+    "Net": "ctrl_carry_set_i",
+    "High-Level Event": "Assertion of the carry set signal for arithmetic operations.",
+    "Logical Summary": "The `ctrl_carry_set_i` net indicates that the carry condition is explicitly set for arithmetic operations, which allows the subsequent operations to account for potential overflow or carry propagation. This net interacts with the carry flag and affects the overall arithmetic logic unit (ALU) behavior.",
+    "Reasoning": "The presence of `ctrl_carry_set_i` in the logical expression ensures that the carry condition is actively managed within the CPU's control logic, facilitating correct arithmetic execution when overflow occurs or when a carry is generated during operations."
+  }
+]

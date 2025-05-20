@@ -1,0 +1,11 @@
+High-Level Event,Net,Triggered?,Comments
+Branch misprediction detected.,branch_mispredict_i,,
+Status check for special register access.,checking,,
+Indication of pipeline stall condition.,cpu_stall,,
+ALU operation result output for subsequent processing.,ctrl_alu_result_i[31:0],,
+Branch exception handling via program counter update.,ctrl_branch_except_pc_o[31:0],,
+Triggering of a branch exception.,ctrl_branch_exception_o,,
+Control bubble generation in the pipeline.,ctrl_bubble_o,,
+Carry flag clear signal assertion.,ctrl_carry_clear_i,,
+Carry flag signal generation for arithmetic operations.,ctrl_carry_o,,
+Assertion of the carry set signal for arithmetic operations.,ctrl_carry_set_i,,

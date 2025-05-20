@@ -1,0 +1,20 @@
+- Net: decode_op_lsu_store_o
+- High-Level Event: Detection of a Load-Store Unit (LSU) store operation
+- Logical Summary: This expression indicates that the net signifies a LSU store operation when the instruction opcode matches specific values {0b11, 0x5}, {0b11, 0x6}, {0b11, 0x7}, or when the opcode is {0b11, 0x3} and the feature for atomic operations is not equal to 'NONE'.
+- Reasoning: The logical expression shows that the net decode_op_lsu_store_o is set to true when the opcode corresponds to store instructions for specific values or when it represents a store operation with atomic features enabled. This event signifies the detection of a LSU store operation based on the provided opcode conditions.
+
+- Net: decode_rfa_adr_o
+- High-Level Event: Determination of the address for register file A
+- Logical Summary: The net decode_rfa_adr_o is used to specify the address for register file A based on the value extracted from bits 20 to 16 of the decode_insn_i signal.
+- Reasoning: The net decode_rfa_adr_o is responsible for determining the specific address within register file A by extracting and utilizing the relevant bits from the decode_insn_i signal.
+
+- Net: decode_op_brcond_o
+- High-Level Event: Decoding branch conditional operations
+- Logical Summary: The net decode_op_brcond_o is used to decode instructions related to branch conditional operations. It determines whether a branch operation should be taken based on the conditions specified in the instruction.
+- Reasoning: The net decode_op_brcond_o plays a crucial role in the instruction pipeline by identifying and decoding branch conditional operations, allowing the processor to make decisions on branching based on specified conditions.
+
+- Net: decode_op_movhi_o
+- High-Level Event: Decoding move immediate high operations
+- Logical Summary: The net decode_op_movhi_o is responsible for decoding instructions related to moving immediate high values into a register. It extracts the immediate high value specified in the instruction and processes it accordingly.
+- Reasoning: In various architectures like RISC-V and ARM, the move immediate high instruction is used to load a 16-bit immediate value into a register by shifting it to the higher bits. The decode_op_movhi_o net ensures that this operation is correctly decoded and executed in the processor.
+

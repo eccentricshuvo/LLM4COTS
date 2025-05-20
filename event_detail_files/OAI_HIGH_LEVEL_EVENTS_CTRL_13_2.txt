@@ -1,0 +1,13 @@
+Net: ctrl_flag_clear
+
+High-Level Event: Setting or clearing a control flag based on various conditions in the ALU execution stage.
+
+Logical Summary & Reasoning: The signal `ctrl_flag_clear` is determined by multiple conditions in the ALU execution stage. It is cleared if a reset signal is active, set based on specific ALU operation results, and influenced by various comparisons and operations within the ALU module.
+
+Test-Stimulus Guidance: To provoke the `ctrl_flag_clear` event, software can perform arithmetic operations that involve comparisons, set flags based on ALU results, and utilize specific ALU instructions that trigger the conditions affecting the control flag.
+
+Instruction Categories:
+1. Arithmetic Instructions: Instructions that involve arithmetic operations in the ALU.
+2. Comparison Instructions: Instructions that compare values in the ALU.
+3. Flag-Setting Instructions: Instructions that set flags based on ALU operation results.
+

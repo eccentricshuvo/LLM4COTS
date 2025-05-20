@@ -1,0 +1,20 @@
+- Net: decode_op_lsu_store_o
+- High-Level Event: Initiation of a store operation in the Load Store Unit (LSU).
+- Logical Summary with Other Nets: This net is determined by the opcode (`opc_insn`) of the current instruction. It becomes true for specific opcodes that represent store operations, including those with atomic feature support if enabled (`FEATURE_ATOMIC` not equal to `NONE`).
+- Reasoning: The logical expression involves checking the opcode of the instruction against known store operation codes (e.g., `{2'b11, 4'h5}`, `{2'b11, 4'h6}`, `{2'b11, 4'h7}`) or an atomic operation code (`{2'b11, 4'h3}`) when atomic operations are supported. This indicates the net signals when a store operation is to be executed by the LSU, reflecting its role in controlling data movement from the processor to memory.
+
+- Net: decode_rfa_adr_o
+- High-Level Event: Register File Address Selection for Operand Access.
+- Logical Summary: This net represents the selection of a register address for accessing an operand based on the instruction being decoded.
+- Reasoning: The assignment of `decode_rfa_adr_o` from `decode_insn_i[20:16]` suggests it is used to select a specific register address from the decoded instruction, indicating its role in identifying the source register for operand fetch in the execution of the instruction. This process is fundamental across architectures like OpenRISC, RISC-V, ARM, and x86 for instruction execution, where operands may be fetched from a register file based on the decoded instruction.
+
+- Net: decode_op_brcond_o
+- High-Level Event: Branch Condition Operation Decoding
+- Logical Summary: This net signals the decoding of a branch operation that is conditional, indicating the instruction set has encountered a branch instruction that requires condition evaluation.
+- Reasoning: The logical expression `(decode_op_bf_o OR decode_op_bnf_o)` for `decode_op_brcond_o` implies that this net is active if either a branch-on-flag (`bf`) or branch-not-on-flag (`bnf`) operation is decoded. This indicates its role in executing conditional branch instructions, which are pivotal in controlling the flow of execution based on specific conditions in all major CPU architectures such as OpenRISC, RISC-V, ARM, and x86.
+
+- Net: decode_op_movhi_o
+- High-Level Event: Move High Immediate Decoding
+- Logical Summary: This net indicates the decoding process of a move high immediate operation, signifying that the instruction set has encountered an operation that moves an immediate value into the higher part of a register.
+- Reasoning: The logical expression `(opc_insn EQUAL EQUAL {2'b00, 4'h6})` for `decode_op_movhi_o` implies that this net becomes active when a specific opcode pattern (indicating a move high immediate operation) is recognized by the decode stage. This operation is relevant in architectures like OpenRISC, RISC-V, ARM, and x86 for manipulating high-order bits of a register directly with an immediate value, useful for constructing large constants or addresses in multiple instruction steps.
+
